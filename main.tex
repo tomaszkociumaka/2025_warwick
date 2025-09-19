@@ -1,0 +1,966 @@
+\documentclass[sans-serif,aspectratio=169]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{array,amsbsy}
+\usepackage{tabu}
+\usepackage{comment}
+\usepackage{soul}
+\usepackage{tikz}
+\usepackage{tabularray}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{pifont}
+\usepackage{dsfont}
+\usepackage[normalem]{ulem}
+\usepackage[noend,ruled]{algorithm2e}
+\usepackage{tcolorbox}
+\usepackage{xparse}
+\usepackage{calc}
+\usepackage{braket}
+
+
+\usetikzlibrary{decorations.pathreplacing,decorations.pathmorphing,matrix,positioning}
+\usetikzlibrary{shapes,calc,patterns,arrows,shapes,arrows.meta,matrix,math,quotes}
+
+\input{settings.tex}
+\input{macros.tex}
+
+
+\title[Bounded Edit Distances]{\LARGE Bounded Edit Distance}
+
+\date{Based on joint work with: Alejandro Cassis, Daniel Gibney, Egor Gorbachev, Ce Jin, Sharma Thankachan, and Philip Wellnitz\\\bigskip
+\large Algorithms \& Complexity @ Warwick\\  September 22nd, 2025; Coventry, UK}
+\author[Tomasz Kociumaka]{\LARGE Tomasz Kociumaka}
+
+\institute{
+ \vspace{.4cm}
+ \hfill
+ \raisebox{-0.5\height}{\includegraphics[width=0.4\textwidth,keepaspectratio]{./pic/mpi-logo-en.pdf}}\hfill
+ \raisebox{-0.5\height}{\includegraphics[width=0.4\textwidth,keepaspectratio]{./pic/sic.pdf}}\hfill{\,}
+ \vspace{0cm}
+}
+
+%\includeonlyframes{current}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+    
+\begin{frame}<-4>[label=ed]{\only<6->{Bounded }Edit Distance}
+
+  \begin{block}{Edit distance $\ed(X,Y)$ \hfill Levenshtein distance [Lev65]}
+  Minimum number of character insertions, deletions, and substitutions that transform $X$ to $Y$.
+  \end{block}
+  
+  \begin{center}
+  \begin{tikzpicture}
+
+        
+    \begin{scope}[xscale=0.3,yscale=-1,xshift=-25cm]
+    \draw (-1,0) node{$X:$};
+    \draw (-1,1) node{$Y:$};
+    \foreach \x [count=\i] in {\textcolor{red}{r},e,l,e,\textcolor{red}{v},a,n,t}{
+      \draw (\i,0) node {$\mathtt{\vphantom{relevant}\x}$};
+    }
+    \foreach \x [count=\i] in {e,l,e,\textcolor{red}{p},\textcolor{red}{h},a,n,t}{
+        \draw (\i,1) node {$\mathtt{\vphantom{elephant}\x}$};
+    }
+    \foreach \x/\y in {2/1,3/2,4/3,6/6,7/7,8/8}{
+      \draw[thick] (\x,0.2) -- (\y,0.8);
+    }
+    \foreach \x/\y in {5/4}{
+      \draw[thick,red,densely dashed] (\x,0.2) -- (\y,0.8);
+    }
+  
+  
+    \draw (14,0.5) node {$\ed(X,Y)=3$};
+    \end{scope}
+    
+    \onslide<2->{
+    \begin{scope}[xscale=0.3,yscale=-1]
+    \draw (-1,0) node{$X:$};
+    \draw (-1,1) node{$Y:$};
+    \foreach \x [count=\i] in {b,\textcolor{red}{b},a,b,a,b,\textcolor{red}{b},a,a,b}{
+      \draw (\i,0) node {$\mathtt{\vphantom{ab}\x}$};
+    }
+    \foreach \x [count=\i] in {b,a,b,a,b,\textcolor{red}{a},a,a,b,\textcolor{red}{b}}{
+        \draw (\i,1) node {$\mathtt{\vphantom{ab}\x}$};
+    }
+    \foreach \x/\y in {1/1,3/2,4/3,5/4,6/5,8/7,9/8,10/9}{
+      \draw[thick] (\x,0.2) -- (\y,0.9);
+    }
+    \foreach \x/\y in {7/6}{
+      \draw[thick,red,densely dashed] (\x,0.2) -- (\y,0.9);
+    }
+  
+  
+    \draw (15,0.5) node {$\ed(X,Y)=3$};
+    \end{scope}
+    }
+  \end{tikzpicture}
+  \end{center}
+  \pause\pause
+
+  Fundamental measure of string (dis)similarity
+  \begin{columns}
+  \begin{column}{0.39\textwidth}
+    
+    \textbf{Applications:}
+    \begin{itemize}
+        \item Bioinformatics
+        \item Natural Language Processing
+        \item Version Control Systems
+    \end{itemize}
+    \vspace{.7cm}
+  \end{column}
+
+  \pause
+  \begin{column}{0.6\textwidth}
+    \vspace{.1cm}
+
+    \textbf{Results:}
+
+    \begin{tblr}{width=.99\linewidth,colspec={X[3,r]X[2,c]X[3.9,l]}}
+      %Reference & Time  & Remarks   \\
+      \where{Vin68,NW70,Sel74,...} & $\Oh(n^2)$ & $n=\max(|X|,|Y|)$ \\
+      \onslide<5->{\where{BI15,BK15}} & \onslide<5->{\textcolor{red}{$n^{2-o(1)}$}} & \onslide<5->{if OVH holds}\\
+      \onslide<6->{\where{Ukk85,Mye86}} & \onslide<6->{$\Oh(nk)$} & \onslide<6->{$k=\ed(X,Y)$} \\
+      \onslide<7->{\where{LV88,LMS98}} & \onslide<7->{$\Oh(n+k^2)$} & \onslide<8->{\textcolor{red}{OVH-tight}} \\
+    \end{tblr}
+
+  \end{column}
+  \end{columns}
+  
+  
+  \begin{center}
+
+  \end{center}
+  
+  \end{frame}
+
+  \begin{frame}{$\Oh(n^2)$-Time Algorithm}
+
+  \begin{center}
+    \begin{tikzpicture}[x=0.625cm, y=-0.625cm]
+      \draw[white] (-1,-1) -- (11,11);
+      \onslide<2,5->{
+      \draw[line width=7pt, blue!30,line cap=round](0,0) -- (1,1) -- (2,1) -- (10,9) -- (10,10);
+      \begin{scope}[x=0.3cm,y=-1cm,xshift=7.2cm,yshift=-2.75cm]
+        \foreach \x [count=\i] in {b,\textcolor{darkred}{b},a,b,a,b,\textcolor{darkred}{b},a,a,b}{
+          \draw (\i,0) node {$\mathtt{\vphantom{ab}\x}$};
+        }
+        \foreach \x [count=\i] in {b,a,b,a,b,\textcolor{darkred}{a},a,a,b,\textcolor{darkred}{b}}{
+            \draw (\i,1) node {$\mathtt{\vphantom{ab}\x}$};
+        }
+        \foreach \x/\y in {1/1,3/2,4/3,5/4,6/5,8/7,9/8,10/9}{
+          \draw[thick,darkgreen] (\x,0.2) -- (\y,0.9);
+        }
+        \foreach \x/\y in {7/6}{
+          \draw[thick,darkred,densely dashed] (\x,0.2) -- (\y,0.9);
+        }
+      \end{scope}
+      }
+      \onslide<3>{
+        \draw[line width=7pt, blue!30,line cap=round](0,0) -- (1,0) -- (9,8) -- (9,9) -- (10,10);
+        \begin{scope}[x=0.3cm,y=-1cm,xshift=7.2cm,yshift=-2.75cm]
+          \foreach \x [count=\i] in {\textcolor{darkred}{b},b,a,b,a,b,\textcolor{darkred}{b},a,a,b}{
+            \draw (\i,0) node {$\mathtt{\vphantom{ab}\x}$};
+          }
+          \foreach \x [count=\i] in {b,a,b,a,b,\textcolor{darkred}{a},a,a,\textcolor{darkred}{b},b}{
+              \draw (\i,1) node {$\mathtt{\vphantom{ab}\x}$};
+          }
+          \foreach \x/\y in {2/1,3/2,4/3,5/4,6/5,8/7,9/8,10/10}{
+            \draw[thick,darkgreen] (\x,0.2) -- (\y,0.9);
+          }
+          \foreach \x/\y in {7/6}{
+            \draw[thick,darkred,densely dashed] (\x,0.2) -- (\y,0.9);
+          }
+        \end{scope}
+        }
+      \onslide<1-3>{
+      \input{graph.tex}
+      }
+      \onslide<4->{
+        \input{graphdp.tex}
+        }
+
+    \end{tikzpicture}
+  \end{center}
+  
+\end{frame}
+
+
+\againframe<4-6>{ed}
+
+\begin{frame}{$\Oh(nk)$-Time Algorithm}
+
+  \begin{center}
+    \begin{tikzpicture}[x=0.625cm, y=-0.625cm]
+      \draw[white] (-1,-1) -- (11,11);
+      \filldraw<7>[line width=7pt,black!20] (0,0)--(3,0) -- (10,7) -- (10,10)-- (7,10) -- (0,3) -- cycle;
+      \onslide<6->{
+      \draw[line width=7pt, blue!30,line cap=round](0,0) -- (1,1) -- (2,1) -- (10,9) -- (10,10);
+      \begin{scope}[x=0.3cm,y=-1cm,xshift=7.2cm,yshift=-2.75cm]
+        \foreach \x [count=\i] in {b,\textcolor{darkred}{b},a,b,a,b,\textcolor{darkred}{b},a,a,b}{
+          \draw (\i,0) node {$\mathtt{\vphantom{ab}\x}$};
+        }
+        \foreach \x [count=\i] in {b,a,b,a,b,\textcolor{darkred}{a},a,a,b,\textcolor{darkred}{b}}{
+            \draw (\i,1) node {$\mathtt{\vphantom{ab}\x}$};
+        }
+        \foreach \x/\y in {1/1,3/2,4/3,5/4,6/5,8/7,9/8,10/9}{
+          \draw[thick,darkgreen] (\x,0.2) -- (\y,0.9);
+        }
+        \foreach \x/\y in {7/6}{
+          \draw[thick,darkred,densely dashed] (\x,0.2) -- (\y,0.9);
+        }
+      \end{scope}
+      }
+
+      \input{graphdp_nk.tex}
+
+    \end{tikzpicture}
+  \end{center}
+  
+\end{frame}
+
+\againframe<6-7>{ed}
+
+\begin{frame}<-14,19->{$\Oh(n+k^2)$-Time Algorithm}
+
+  \begin{center}
+    \begin{tikzpicture}[x=0.625cm, y=-0.625cm]
+      \draw[white] (-1,-1) -- (11,11);
+      \onslide<22->{
+      \draw[line width=7pt, blue!30,line cap=round](0,0) -- (1,1) -- (2,1) -- (10,9) -- (10,10);
+      \begin{scope}[x=0.3cm,y=-1cm,xshift=7.2cm,yshift=-2.75cm]
+        \foreach \x [count=\i] in {b,\textcolor{darkred}{b},a,b,a,b,\textcolor{darkred}{b},a,a,b}{
+          \draw (\i,0) node {$\mathtt{\vphantom{ab}\x}$};
+        }
+        \foreach \x [count=\i] in {b,a,b,a,b,\textcolor{darkred}{a},a,a,b,\textcolor{darkred}{b}}{
+            \draw (\i,1) node {$\mathtt{\vphantom{ab}\x}$};
+        }
+        \foreach \x/\y in {1/1,3/2,4/3,5/4,6/5,8/7,9/8,10/9}{
+          \draw[thick,darkgreen] (\x,0.2) -- (\y,0.9);
+        }
+        \foreach \x/\y in {7/6}{
+          \draw[thick,darkred,densely dashed] (\x,0.2) -- (\y,0.9);
+        }
+
+        \onslide<23>{
+          \draw (0,2)[right] node {$\Oh(k^2)$ LCE queries:};
+          \draw (0,2.6)[right] node {$\Oh(1)$ time per query};
+          \draw (0,3.2)[right] node {$\Oh(n)$ preprocessing time};
+        }
+      \end{scope}
+      }
+
+      \input{graphdp_LV.tex}
+
+    \end{tikzpicture}
+  \end{center}
+  
+\end{frame}
+
+\againframe<7>{ed}
+
+
+\begin{frame}<1,2>[label=toc]
+  \begin{centering}
+    \alt<1,2>{
+    \begin{beamercolorbox}[sep=10pt,center]{part title}
+    \usebeamerfont{section title}Classic algorithms for bounded edit distance\par
+    \end{beamercolorbox}
+    }{
+    \begin{beamercolorbox}[sep=10pt,center]{passive}
+    \usebeamerfont{section title}Classic algorithms for bounded edit distance\par
+    \end{beamercolorbox}
+    }
+
+    \medskip
+
+    \alt<1,3>{
+    \begin{beamercolorbox}[sep=10pt,center]{part title}
+    \usebeamerfont{section title}Bounded edit distance in various settings\par
+    \end{beamercolorbox}
+    }{
+    \begin{beamercolorbox}[sep=10pt,center]{passive}
+    \usebeamerfont{section title}Bounded edit distance in various settings\par
+    \end{beamercolorbox}
+    }
+
+    \medskip
+
+    \alt<1,4>{
+    \begin{beamercolorbox}[sep=10pt,center]{part title}
+    \usebeamerfont{section title}Central new tool: Self-edit distance\par
+    \end{beamercolorbox}
+    }{
+    \begin{beamercolorbox}[sep=10pt,center]{passive}
+    \usebeamerfont{section title}Central new tool: Self-edit distance\par
+    \end{beamercolorbox}
+    }
+
+    \medskip
+
+    \alt<1,5>{
+    \begin{beamercolorbox}[sep=10pt,center]{part title}
+    \usebeamerfont{section title}Algorithm overview\par
+    \end{beamercolorbox}
+    }{
+    \begin{beamercolorbox}[sep=10pt,center]{passive}
+    \usebeamerfont{section title}Algorithm overview\par
+    \end{beamercolorbox}
+    }
+
+    \medskip
+    \alt<1,6>{
+    \begin{beamercolorbox}[sep=10pt,center]{part title}
+    \usebeamerfont{section title}Conclusions and open problems\par
+    \end{beamercolorbox}
+    }{
+    \begin{beamercolorbox}[sep=10pt,center]{passive}
+    \usebeamerfont{section title}Conclusions and open problems\par
+    \end{beamercolorbox}
+    }
+    \end{centering}
+
+\end{frame}
+
+\againframe<3>{toc}
+
+
+\begin{frame}{Compressed String Processing}
+    \vspace{-.2cm}
+    \hfill \textbf{\small \boldmath Notation: $n = |X| + |Y|$, $k = \ed(X, Y)$, $g = \text{compressed size of } X\cdot Y$}
+
+    \medskip
+
+  \textbf{Problem:} Can we compute (bounded) edit distance faster if the input strings are highly compressible using standard methods? (grammar compression, LZ77, BTW+RLE,\ldots)
+
+\vfill
+
+\bigskip
+
+
+\begin{center}
+
+\begin{tabular}{rccr}
+    \emph{Reference} & \emph{Time} & \emph{Remarks}\\[1ex]
+    \hline\\[-1.3ex]
+    \where{Vin68,NW70,Sel74,WF74} & $\Oh(n^2)$ &  tight for $g=\Theta(n)$ under SETH \where{BI15,BK15}\\[1ex]
+    \onslide<2->{\where{HLLW09,Gaw12,Tis15} & $\Ohtilde(gn)$ & tight for any $g=n^{\Theta(1)}$ under SETH \where{ABBK17}\\[1ex]}
+    \onslide<3->{\where{LV88+MSU94} & $\Ohtilde(g + k^2)$ &  \\[1ex]}
+    \onslide<4->{\where{G\textbf{K}LS22} & $\Ohtilde(g\sqrt{kn})$ & \\[1ex]}
+    \onslide<5->{\textcolor{gray}{\textbf{Open}} & \textcolor{gray}{$\Ohtilde(gk)$} & \\[1ex]}
+\end{tabular}
+\end{center}
+\vfill
+\end{frame}
+
+\begin{frame}<-2,5->{Quantum Algorithms}
+  \textbf{Problem:}
+        Can we compute (bounded) edit distance faster using a quantum computer?
+
+    \medskip
+    \pause
+    \textbf{Model:}
+        Quantum random access oracle implementing the function $i \mapsto S[i]$. \begin{itemize}\item $O_S\ket{i}\ket{0}=\ket{i}\ket{S[i]}$
+        \item $O_S$ can be queried with a superposition of indices $i$\end{itemize}
+
+    \pause
+    \vfill \bigskip
+    \begin{center}
+\begin{tabular}{rccr}
+    \emph{Reference} & \emph{Time} & \emph{Remarks}\\[1ex]
+    \hline\\[-1.3ex]
+    \onslide<5->{\where{Vin68,NW70,Sel74,WF74} & $\Oh(n^2)$ & \\[1ex]}
+    \onslide<6->{\where{BPS21} &  \textcolor{red}{$n^{1.5-o(1)}$} &  holds for $k=\Theta(n)$ under QSETH\\[1ex]}
+    \onslide<7->{\where{LV88+JN23} & $\hat{\Oh}(k\sqrt{n}+k^2)$ & \\[1ex]}
+    \onslide<8->{\textbf<10>{\where{JG\textbf{K}T24}} & $\Ohtilde(\sqrt{nk}+k^2)$ &  optimal number $\Ohtilde(\sqrt{nk})$ of oracle queries \\[1ex]}
+     \onslide<9->{\textcolor{gray}{\textbf{Open}} & \textcolor{gray}{$\Ohtilde(\sqrt{nk}+k\sqrt{k})$} & \\[1ex]}
+\end{tabular}
+\end{center}
+\vfill
+\end{frame}
+
+\begin{frame}{Dynamic Algorithms}
+  \textbf{Problem:}
+        Maintain strings $X,Y \in \Sigma^{\le n}$ subjects to updates (character edits), and report $\ed(X,Y)$ after each update.
+    
+      \pause
+    \begin{center}
+      \begin{tikzpicture}
+        
+        \begin{scope}[xscale=0.3,yscale=-1]
+        \draw (-1,0) node{$X:$};
+        \draw (-1,1) node{$Y:$};
+    
+        \onslide<2>{
+        \foreach \x [count=\i] in {b,\textcolor{red}{b},a,b,a,b,\textcolor{red}{b},a,a,b}{
+          \draw (\i,0) node {$\mathtt{\vphantom{ab}\x}$};
+        }
+        \foreach \x [count=\i] in {b,a,b,a,b,\textcolor{red}{a},a,a,b,\textcolor{red}{b}}{
+            \draw (\i,1) node {$\mathtt{\vphantom{ab}\x}$};
+        }
+        \foreach \x/\y in {1/1,3/2,4/3,5/4,6/5,8/7,9/8,10/9}{
+          \draw[thick] (\x,0.2) -- (\y,0.9);
+        }
+        \foreach \x/\y in {7/6}{
+          \draw[thick,red,densely dashed] (\x,0.2) -- (\y,0.9);
+        }
+        \draw (20,0.5) node {$\ed(X,Y)=3$};
+        }
+        \onslide<3>{
+          \foreach \x [count=\i] in {b,b,a,b,a,b,\textcolor{red}{b},a,a,b}{
+            \draw (\i,0) node {$\mathtt{\vphantom{ab}\x}$};
+          }
+          \foreach \x [count=\i] in {b,b,a,b,a,b,\textcolor{red}{a},a,a,b,\textcolor{red}{b}}{
+              \draw (\i,1) node {$\mathtt{\vphantom{ab}\x}$};
+          }
+          \draw (2,1) node[fill=blue!30,inner sep=0pt] {$\mathtt{\vphantom{ab}b}$};
+
+          \foreach \x/\y in {1/1,2/2,3/3,4/4,5/5,6/6,8/8,9/9,10/10}{
+            \draw[thick] (\x,0.2) -- (\y,0.9);
+          }
+          \foreach \x/\y in {7/7}{
+            \draw[thick,red,densely dashed] (\x,0.2) -- (\y,0.9);
+          }    
+          \draw (20,0.5) node {$\ed(X,Y)=2$};
+        }
+        \onslide<4>{
+          \foreach \x [count=\i] in {b,b,a,b,a,b,\textcolor{red}{b},a,b,b}{
+            \draw (\i,0) node {$\mathtt{\vphantom{ab}\x}$};
+          }
+          \draw (9,0) node[fill=blue!30,inner sep=0pt] {$\mathtt{\vphantom{ab}b}$};
+
+          \foreach \x [count=\i] in {b,b,a,b,a,b,\textcolor{red}{a},a,\textcolor{red}{a},b,b}{
+              \draw (\i,1) node {$\mathtt{\vphantom{ab}\x}$};
+          }
+          \foreach \x/\y in {1/1,2/2,3/3,4/4,5/5,6/6,8/8,9/10,10/11}{
+            \draw[thick] (\x,0.2) -- (\y,0.9);
+          }
+          \foreach \x/\y in {7/7}{
+            \draw[thick,red,densely dashed] (\x,0.2) -- (\y,0.9);
+          }    
+          \draw (20,0.5) node {$\ed(X,Y)=2$};
+        }
+        \onslide<5->{
+          \foreach \x [count=\i] in {b,b,\textcolor{red}{a},b,a,b,\textcolor{red}{b},a,b,b}{
+            \draw (\i,0) node {$\mathtt{\vphantom{ab}\x}$};
+          }
+          \foreach \x [count=\i] in {b,b,b,a,b,\textcolor{red}{a},a,\textcolor{red}{a},b,b}{
+              \draw (\i,1) node {$\mathtt{\vphantom{ab}\x}$};
+          }
+          \foreach \x/\y in {1/1,2/2,4/3,5/4,6/5,8/7,9/9,10/10}{
+            \draw[thick] (\x,0.2) -- (\y,0.9);
+          }
+          \foreach \x/\y in {7/6}{
+            \draw[thick,red,densely dashed] (\x,0.2) -- (\y,0.9);
+          }    
+          \draw (20,0.5) node {$\ed(X,Y)=3$};
+        }
+        \onslide<5>{\draw[ultra thick,blue!30] (2.5, .9) -- (2.5,1.15);}
+        \end{scope}
+      \end{tikzpicture}
+      \end{center}
+    \pause\pause\pause\pause
+
+    \vfill
+    \begin{center}
+
+\begin{tabular}{rccr}
+    \emph{Reference} & \emph{Update Time} & \emph{Remarks}\\[1ex]
+    \hline\\[-1.3ex]
+    \onslide<6->{\where{Vin68,NW70,Sel74,WF74} & $\Oh(n^2)$ & \\[1ex]}
+    \onslide<7->{\where{LV88+MSU94} & $\Ohtilde(k^2)$ &  \\[1ex]}
+    \onslide<8->{\where{C\textbf{K}M20} & $\Ohtilde(n)$ &  tight for $k=\Theta(n)$ under OVH\\[1ex]}
+    \onslide<9->{\textbf<10>{\where{G\textbf{K}24}} & $\Ohtilde(k)$ &   tight under OVH\\[1ex]}
+\end{tabular}
+\end{center}
+\vfill
+\end{frame}
+
+\begin{frame}{Weighted Edit Distance}
+    \vfill
+    \begin{block}{Weighted Edit Distance $\wed(X,Y)$ \hfill $w \colon (\Sigma \cup \{\varepsilon\}) \times (\Sigma \cup \{\varepsilon\}) \to \RR_{\ge 0}$}
+        The minimum cost of transforming $X$ into $Y$ by editing individual characters, where:
+        \begin{itemize}
+            \item inserting $b$ costs $w(\varepsilon, b)$;
+            \item deleting $a$ costs $w(a, \varepsilon)$;
+            \item substituting $a$ for $b$ costs $w(a, b)$.
+        \end{itemize}
+    \end{block}
+  \begin{tikzpicture}
+      \hspace*{1.3cm}
+    \begin{scope}[xscale=0.3,yscale=-1]
+    \def\st{10}
+    \def\sx{\st-12}
+    \def\sy{-0.3}
+    \def\sizx{1.3333333}
+    \def\sizy{0.4}
+    \foreach \x in {0,1,2,3,4}{
+        \draw (\sx + \sizx * \x, \sy) -- (\sx + \sizx * \x, \sy + \sizy * 4);
+    }
+    \foreach \y in {0,1,2,3,4}{
+        \draw (\sx, \sy + \sizy * \y) -- (\sx + \sizx * 4, \sy + \sizy * \y);
+    }
+    \foreach \ch/\r/\c in {w:/1.3/-1.7,\varepsilon/0/1,\mathtt{a}/0/2,\mathtt{b}/0/3,\varepsilon/1/0,0/1/1,1/1/2,4/1/3,\mathtt{a}/2/0,1/2/1,0/2/2,2/2/3,\mathtt{b}/3/0,3/3/1,2/3/2,0/3/3}{
+        \draw<1> (\sx + \sizx * \c + \sizx * 0.5, \sy + \sizy * \r + \sizy * 0.5) node {$\mathtt{\vphantom{ab}}\ch$};
+    }
+    \foreach \ch/\r/\c in {w:/1.3/-1.7,\varepsilon/0/1,\mathtt{a}/0/2,\mathtt{b}/0/3,\varepsilon/1/0,0/1/1,1/1/2,1/1/3,\mathtt{a}/2/0,1/2/1,0/2/2,1/2/3,\mathtt{b}/3/0,1/3/1,1/3/2,0/3/3}{
+        \draw<2-> (\sx + \sizx * \c + \sizx * 0.5, \sy + \sizy * \r + \sizy * 0.5) node {$\mathtt{\vphantom{ab}}\ch$};
+    }
+    
+
+    \draw (\st-1,0) node{$X:$};
+    \draw (\st-1,1) node{$Y:$};
+
+    \foreach \x [count=\i] in {b,b,a,b,a,\textcolor{red}{b},b,\textcolor{red}{a},\textcolor{red}{a},b}{
+      \draw<1> (\st+\i,0) node {$\mathtt{\vphantom{ab}\x}$};
+    }
+    \foreach \x [count=\i] in {b,\textcolor{red}{a},b,a,b,a,\textcolor{red}{a},\textcolor{red}{a},b,b}{
+        \draw<1> (\st+\i,1) node {$\mathtt{\vphantom{ab}\x}$};
+    }
+    \foreach \x/\y in {1/1,2/3,3/4,4/5,5/6,7/9,10/10}{
+      \draw<1>[thick] (\st+\x,0.2) -- (\st+\y,0.9);
+    }
+    \foreach \x/\y in {6/7}{
+      \draw<1>[thick,red,densely dashed] (\st+\x,0.2) -- (\st+\y,0.9);
+    }
+    
+
+    \foreach \x [count=\i] in {b,\textcolor{red}{b},a,b,a,b,\textcolor{red}{b},a,a,b}{
+      \draw<2-> (\st+\i,0) node {$\mathtt{\vphantom{ab}\x}$};
+    }
+    \foreach \x [count=\i] in {b,a,b,a,b,\textcolor{red}{a},a,a,b,\textcolor{red}{b}}{
+        \draw<2-> (\st+\i,1) node {$\mathtt{\vphantom{ab}\x}$};
+    }
+    \foreach \x/\y in {1/1,3/2,4/3,5/4,6/5,8/7,9/8,10/9}{
+      \draw<2->[thick] (\st+\x,0.2) -- (\st+\y,0.9);
+    }
+    \foreach \x/\y in {7/6}{
+      \draw<2->[thick,red,densely dashed] (\st+\x,0.2) -- (\st+\y,0.9);
+    }
+    
+  
+  
+    \draw<1> (\st+20,0.5) node {$\wed(X,Y)=6$};
+    \draw<2-> (\st+20,0.5) node {$\ed(X,Y)=3$};
+    \end{scope}
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}<2-4,6->{Weighted Edit Distance}
+    \vspace{-.9cm}
+    \hfill \textbf{\small \boldmath Notation: $n = |X| + |Y|$, $k = \wed(X, Y)$}
+
+    \vfill
+    \small
+\begin{tabular}{rccr}
+    \emph{Reference} & \emph{Time} & \emph{Edit weights} & \\[1ex]
+    \hline\\[-1.3ex]
+    \where{Vin68,...} & $\Oh(n^2)$ & any & tight under OVH\\[1ex]
+    \onslide<3->{\where{Ukk85,Mye86} & $\Oh(nk)$ & $\mathbb{R}_{\ge 1}$ & \\[1ex]}
+    \onslide<4->{\where{LV88} & $\Oh(n + k^2)$ & $\{1\}$ & tight for $1 \le k \le n$ under OVH\\[1ex]}
+    \onslide<6->{\where{DGH\textbf{K}S23} & $\Oh(n + k^5)$ & $\mathbb{R}_{\ge 1}$ & \\[1ex]}
+    \onslide<7->{\textbf<11>{\where{C\textbf{K}W23}} & $\tOh(n + \sqrt{nk^3})$ & $\mathbb{R}_{\ge 1}$ & tight for $\sqrt{n} \le k \le n$ under APSPH\\[1ex]}
+    \onslide<8->{\textcolor{gray}{\textbf{Open}} & \textcolor{gray}{$\Ohtilde(n+k^{2.5})$} & \textcolor{gray}{$\mathbb{R}_{\ge 1}$} & \\[1ex]}
+    \onslide<9->{\textbf<11>{\where{G\textbf{K}24}} & $\tOh(n + Wk^2)$ & $\{1, 2, \ldots, W\}$ & tight for  $1 \le k \le n$ and $W = n^{o(1)}$ under OVH\\[1ex]}
+    \onslide<10->{\textcolor{gray}{\textbf{Open}} & \textcolor{gray}{$\Ohtilde(n+k^2 W^{o(1)})$} &\textcolor{gray}{$\{1, 2, \ldots, W\}$}}
+\end{tabular}
+\end{frame}
+
+\againframe<4>{toc}
+
+\begin{frame}{Self-Edit Distance: Intuition}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+        What makes the case $k\ll n$ easier?
+        \begin{itemize}
+            \item Every optimal alignment $\mathcal{A}$ stays within the $O(k)$ central diagonals.
+            \item<2-> Every optimal alignment $\mathcal{A}$ perfectly matches long fragments of $X$ and $Y$.
+        \end{itemize}
+        \medskip
+
+        \onslide<3->{
+            Say $X[i\dd j)=P=Y[i'\dd j')$ for $|i-i'|\le 2k$.
+            Can we greedily align these fragments?
+            \begin{itemize}
+                \item<4-> If $\mathcal{A}$ intersects $(i,j)\leadsto (i',j')$\onslide<5->{, yes!}
+                    \begin{itemize}
+                        \item<5->[] (For unweighted edit distance.)
+                    \end{itemize}
+                \item<6-> Otherwise, not necessarily...
+                \begin{itemize}
+                        \item<7->[] but $P$ has a low-cost \alert{self-alignment}!
+                    \end{itemize}
+            \end{itemize}
+        }
+        
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \smallskip
+            \begin{center}
+            \begin{tikzpicture}[transform canvas={scale=0.55}, y=-1cm, xshift=-5.3cm, yshift=6cm]
+                \bigpicture{
+                    \input{locality.tex}
+                }
+            \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+ \begin{frame}{Self-Edit Distance}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Self-Edit Distance\hfill [C\textbf{K}W23]}
+                The self-edit distance $\sed(X)$ of a string $X$ is the distance from $(0, 0)$ to $(|X|, |X|)$ in the unweighted alignment graph of $X$ onto itself with the edges on the main diagonal removed.
+            \end{block}
+            \onslide<6->{
+            \textbf{Intuition:}\hfill (for unweighted edit distance)
+            \begin{itemize}
+                \item  If $X[i\dd j)=P=Y[i'\dd j')$ with $|i-i'|\le 2k$ and $\sed(P)> 3k$,
+            then the two fragments can be aligned greedily.
+            \end{itemize}
+           
+            }
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+            \begin{tikzpicture}[scale=0.55, y=-1cm, xshift=-5.3cm, yshift=6cm]
+                \draw[line width=7pt, white,line cap=round](0, 0) -- (11, 11);
+                \draw<3>[line width=7pt, blue!30,line cap=round](0, 0) -- (11, 11);
+                %\draw<5>[line width=7pt, blue!30,line cap=round](0, 0) -- (0, 1) -- (2, 3) -- (5, 3) -- (9, 7) -- (9, 10) -- (10, 11) -- (11, 11);
+                %\draw<6>[line width=7pt, blue!30,line cap=round](0, 0) -- (1, 0) -- (3, 2) -- (3, 3) -- (5, 3) -- (9, 7) -- (9, 10) -- (10, 11) -- (11, 11);
+                %\draw<6-7>[line width=7pt, blue!30,line cap=round](0, 0) -- (1, 0) -- (3, 2) -- (3, 3) -- (5, 3) -- (9, 7) -- (9, 9) -- (10, 9) -- (11, 10) -- (11, 11);
+                %\draw<8>[line width=7pt, blue!30,line cap=round](0, 0) -- (1, 0) -- (3, 2) -- (4, 3) -- (5, 3) -- (9, 7) -- (9, 9) -- (10, 9) -- (11, 10) -- (11, 11);
+                \draw<5->[line width=7pt, blue!30,line cap=round](0, 0) -- (1, 0) -- (3, 2) -- (4, 3) -- (5, 3) -- (9, 7) -- (9, 8) -- (10, 9) -- (11, 10) -- (11, 11);
+
+                \bigpicture{
+                    \input{sed-graph.tex}
+
+                    \draw<2-3>[-latex,very thick,darkgreen] (n0_0) -- (n1_1);
+                    \draw<2-3>[-latex,very thick,darkgreen] (n1_1) -- (n2_2);
+                    \draw<2-3>[-latex,very thick,darkgreen] (n2_2) -- (n3_3);
+                    \draw<2-3>[-latex,very thick,darkgreen] (n3_3) -- (n4_4);
+                    \draw<2-3>[-latex,very thick,darkgreen] (n4_4) -- (n5_5);
+                    \draw<2-3>[-latex,very thick,darkgreen] (n5_5) -- (n6_6);
+                    \draw<2-3>[-latex,very thick,darkgreen] (n6_6) -- (n7_7);
+                    \draw<2-3>[-latex,very thick,darkgreen] (n7_7) -- (n8_8);
+                    \draw<2-3>[-latex,very thick,darkgreen] (n8_8) -- (n9_9);
+                    \draw<2-3>[-latex,very thick,darkgreen] (n9_9) -- (n10_10);
+                    \draw<2-3>[-latex,very thick,darkgreen] (n10_10) -- (n11_11);
+                }
+                %\draw<8->[red, very thick] (-15.5, 10.6) rectangle (-1.7,12.4);
+            \end{tikzpicture}
+            \end{center}
+            %*Picture of $\sed$ alignment graph, flip all parts below main diagonal*
+        \end{column}
+    \end{columns}
+  \end{frame}
+
+\begin{frame}<21-27>{Self-Edit Distance vs Repetitiveness}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{First Key Observation\hfill [CKW23]}
+                If $\sed(X)\le k$, then $X$ can be decomposed into $\le k$ characters and $\le k$ fragments with a \emph{previous occurrence} $\le k$ positions earlier.
+            \end{block}
+            \bigskip
+            \onslide<27->{
+            \begin{corollary}           
+            If $\sed(X)\le k$, then $\mathsf{LZ77}(X)=\Oh(k)$ and $X$ can be represented by a size-$\Ohtilde(k)$ grammar.
+            \end{corollary}
+            }
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \vspace*{-0.4cm}
+            \centering
+            \begin{tikzpicture}[scale=0.53, y=-1cm]
+                \bigpicture{
+                    \input{copy-paste-decomposition.tex}
+                    \input{small-sed-string-decomposition.tex}
+                }%
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+  \end{frame}
+
+   \begin{frame}{Self-Edit Distance vs Alignment Intersections}
+  \begin{columns}
+
+      \begin{column}{0.5\textwidth}
+        \begin{block}{Second Key Observation\hfill [C\textbf{K}W23]}
+         If $\sed(X)>2k$, then every two alignments $X \onto Y$ of cost at most $k$ share a common diagonal edge.
+        \end{block}
+        \pause
+        \textbf{Proof:}
+        If $\mathcal{A}, \mathcal{B} : X \onto Y$ do not share a diagonal edge, then $\mathcal{A}^{-1}\circ \mathcal{B} : X \onto Y$ is a self-alignment of cost at most $2k$.
+        
+        \bigskip
+        \pause
+
+          \begin{block}{Corollary}
+            If $\sed(X[i\dd j))>2k$, then every two alignments $X \onto Y$ of cost at most $k$ \textbf{intersect} within $X[i\dd j)$.
+          \end{block}
+      \end{column}
+      
+      
+      \begin{column}{0.5\textwidth}
+          \begin{tikzpicture}[scale=0.55, y=-1cm]
+              \bigpicture{\input{intersect-sufficient-sed.tex}}
+          \end{tikzpicture}
+      \end{column}
+  \end{columns}
+\end{frame}
+
+\againframe<5>{toc}
+
+
+\begin{frame}<2-15>{Divide-and-Conquer Scheme}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+
+            \smallskip
+            \textbf{Simplifying assumption:} We already have a \textcolor{orange!75}{\emph{near-optimal}} alignment of cost $\Oh(k)$.
+
+            \medskip
+                \begin{itemize}
+                    \item<3->\tikzmark{left}Partition using the \textcolor{orange!75}{\emph{near-optimal}} alignment (e.g., to halve its cost).
+                        \item<4-> The concatenation of optimal \textcolor{violet!60}{$X_L\onto Y_L$} and \textcolor{red!50}{$X_R\onto Y_R$} alignments does not need to be an optimal $X\onto Y$ alignment\alt<-6>{.}{\ldots}
+                        \item<7-> but it has to be fixed only within a region of small $\sed$ using a local \textcolor{blue}{alignment}.\tikzmark{right}
+                        \item<15-> An \textcolor{green}{optimal alignment} can be obtained by following the three alignments.
+                    \end{itemize}
+                
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \hfill
+            \begin{tikzpicture}[scale=0.5, y=-1cm]
+                    \bigpicture{
+                        \input{new_divide_and_conquer.tex}
+                    }
+
+            \end{tikzpicture}
+            \hfill
+            %*Picture of some alignment $\mathcal{A}$, optimal alignments for parts*
+        \end{column}
+    \end{columns}
+  \end{frame}
+
+
+  \begin{frame}{Divide-and-Conquer Scheme: Consequences}
+    \textbf{Main Takeaway}
+   \begin{enumerate}
+    \item Computing $\ed_{\le k}(X,Y)$ reduces to the case of $\sed(X), \sed(Y)=\Oh(k)$.
+    \begin{itemize}
+        \item<2-> In the weighted and dynamic setting, one even can avoid extra logarithmic factors.
+    \end{itemize}
+    \item<3-> Due to $\mathsf{LZ77}(S)=\Oh(\sed(S))$, we can use tools from the fully compressed setting.
+\end{enumerate}
+\pause\pause\pause\bigskip
+
+\textbf{Notes}
+\begin{itemize}
+    \item<4-> Quantum setting:
+    \begin{itemize}
+        \item<4-> The divide-and-conquer scheme is more involved to avoid near-optimal alignment.
+        \item<5-> \emph{Oracle identification} can ``read'' a string compressible to size $g$ using $\Ohtilde(\sqrt{ng})$ queries.
+        \item<5-> For LZ77, also $\Ohtilde(\sqrt{ng})$ time is enough.
+        \item<6-> Once we read $X$ and $Y$, we can apply the classic $\Oh(g+k^2)$-time algorithm.
+    \end{itemize}
+    \item<7->Dynamic and weighted settings:
+    \begin{itemize}
+        \item<7-> The divide-and-conquer scheme can be implemented without any logarithmic overheads.
+        \item<8-> Tools needed for processing compressed strings: 
+        \begin{enumerate}
+            \item Distance matrices.
+            \item Min-plus multiplication of Monge matrices.
+            \item Weight-balanced grammars.
+        \end{enumerate}
+    \end{itemize}
+   \end{itemize}
+  \end{frame}
+
+
+\begin{frame}<-5,9-11>{Distance Matrix}
+  \vspace{-.3cm}
+  \begin{columns}%
+    \begin{column}{.5\textwidth}%
+  \begin{center}
+    \begin{tikzpicture}[x=0.625cm, y=-0.625cm]
+      \draw[white] (-1,-1) -- (11,11);
+
+      \draw<3,9>[line width=7pt, blue!30,line cap=round](0,0) -- (1,1) -- (2,1) -- (10,9) -- (10,10);
+      \draw<4,9>[line width=7pt, teal!30,line cap=round](0,2) -- (1,3) -- (2,3) -- (5,6) -- (8,6) -- (9,7) -- (10,7);
+      \draw<10>[line width=7pt, orange!30,line cap=round](0,0) -- (1,1) -- (2,1) -- (7,6) -- (8,6) -- (9,7) -- (10,7);
+      \draw<10>[line width=7pt, red!30,line cap=round](0,2) -- (1,3) -- (2,3) -- (5,6) -- (7,6) -- (10,9) -- (10,10);
+      \draw<11>[line width=7pt, orange!30,line cap=round](0,0) -- (1,1) -- (2,1) -- (6,5) -- (7,5) -- (9,7) -- (10,7);
+      \draw<11>[line width=7pt, red!30,line cap=round](0,2) -- (1,3) -- (2,3) -- (5,6) -- (7,6) -- (10,9) -- (10,10);
+      \draw<6-7>[line width=7pt, blue!30,line cap=round](0,2) -- (1,3) -- (2,3) -- (1,2) -- (1,1) -- (0,0) -- (1,0) -- (6,5) -- (7,5)-- (9,7) -- (10,7);
+      \draw<7>[line width=7pt, blue!60,line cap=round](2,3) -- (4,3);
+
+
+      \bigpicture{\input{graph.tex}}
+
+      \foreach \y[evaluate={\lb=int(10-\y);}] in {1,...,10}{
+        \draw (n0_\y) node[above=-0.01] {\scriptsize $\lt_{\lb}$};
+      }
+      \foreach \x[evaluate={\lb=int(10+\x);}] in {0,...,10}{
+        \draw (n\x_0) node[above=-0.01] {\scriptsize $\lt_{\lb}$};
+      }
+
+      \foreach \y[evaluate={\lb=int(20-\y);}] in {0,...,9}{
+        \draw (n10_\y) node[below=-0.01] {\scriptsize $\br_{\lb}$};
+      }
+      \foreach \x in {0,...,10}{
+        \draw (n\x_10) node[below=-0.01] {\scriptsize $\br_{\x}$};
+      }
+
+    
+
+    \end{tikzpicture}
+  \end{center}
+\end{column}%
+  \begin{column}{.5\textwidth}%
+    \begin{center}   
+      $D_{X,Y}[i,j] = \dist(\lt_i,\br_j)$
+      \pause
+      \begin{tikzpicture}[xscale=0.3, yscale=-0.3]
+
+        \fill<3,8->[blue!30] (9.5,9.5) rectangle (10.5, 10.5);
+        \fill<4,6->[teal!30] (12.5,7.5) rectangle (13.5, 8.5);
+
+        \fill<10->[orange!30] (12.5,9.5) rectangle (13.5, 10.5);
+        \fill<10->[red!30] (9.5,7.5) rectangle (10.5, 8.5);
+
+        \bigpicture{\input{dist.tex}}
+
+        \filldraw<12> (12.5,8.5) circle(0.1);
+
+        \fill<14>[opacity=0.15] (-0.5,-0.5) rectangle (10,8);
+
+        \end{tikzpicture}
+    \end{center}
+  \end{column}%
+\end{columns}%
+
+\end{frame}
+
+
+\begin{frame}{Algorithms on Distance Matrices}
+    \textbf{Construction:}
+    \begin{itemize}
+        \item  $\Ohtilde(n^2)$ time via multiple-source shortest paths in planar graphs \where{Kle05}.
+    \end{itemize}
+
+    \pause
+
+    \bigskip
+
+    \textbf{Storage:} 
+
+    \begin{itemize}
+        \item  $\Oh(n^2)$ space for general weights;
+        \item  $\Oh(nW)$ space for weights in $\{0,\ldots,W\}$ via core-sparse representation \where{Rus10}.
+    \end{itemize}
+
+    \pause
+
+    \bigskip
+
+    \textbf{Stitching:} $D_{X,Y}, D_{X',Y} \leadsto D_{XX',Y}$
+
+    \begin{itemize}
+        \item  $\Oh(n^2)$ time for general weights via min-plus multiplication of Monge matrices \where{SMAWK87};
+        \item  $\Oh(nW\log n)$ time for weights in $\{0,\ldots,W\}$ using core-sparse multiplication \where{GG\textbf{K}25}.
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}<-3,6->{Hierarchical Box Decomposition}
+    \vspace*{-0.32cm}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item<1-> Optimal alignments stay within a band of width $\Oh(k)$.
+                \item<2-> Cover the band with $\Oh(\frac{n}{k})$ boxes of size $\Oh(k)\times \Oh(k)$.
+                \item<3-> Optimal alignments cross all separators~$V_i$.
+                \item<4-> Since $\sed(X) \le k$, then $X$ consists of $\Oh(k)$ parts with period $\Theta(k)$ each.
+                \item<7-> Compute distance matrices for all $\Oh(k)$ distinct boxes:
+                \begin{itemize}
+                    \item<8-> Use weighted grammars to guide a hierarchical box decomposition.
+                    \item<9-> One can achieve $\Oh(k^2/\ell)$ distinct boxes of size $\Theta(\ell)\times \Theta(\ell)$.
+                    \item<10-> Stitch distance matrices bottom up.
+                \end{itemize}
+                \item<11-> Finally, compute $\Oh(k\log n)$ products.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+            \begin{tikzpicture}[transform canvas={scale=0.55}, y=-1cm, xshift=-5.3cm, yshift=6cm]
+                \bigpicture{
+                    \input{boxes-stripe-D.tex}
+                }
+            \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+\againframe<6>{toc}
+
+
+\begin{frame}{Conclusions}
+    \textbf{Contribution:}
+    \begin{itemize}
+        \item A new scheme for bounded edit distance computation.
+        \item Useful in many settings (quantum, dynamic, weighed).
+        \item Yields near-optimal algorithms in many parameter regimes.
+    \end{itemize}
+
+    \bigskip
+    \pause
+    \textbf{High-level scheme:}
+    \begin{enumerate}
+        \item Computing bounded edit distance reduces to instances with self-edit distance $\Oh(k)$.
+        \item Instances with small self-edit distance are repetitive.
+        \item Stitching distance matrices via min-plus multiplication of structured Monge matrices.
+    \end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}{Open Problems}
+    \textbf{Bridge the remaining gaps:}
+    \begin{enumerate}
+        \item $n^2$ vs $n^{1.5}$ for quantum edit distance.
+        \item $n+k^{2.5}$ vs $n+\sqrt{nk^3}$ for weighted edit distance with $\sqrt[3]{n} \le k \le \sqrt{n}$.
+        \item $n+k^2$ vs $n+k^2W$ for weighted edit distance with integer weights.
+    \end{enumerate}
+
+    \bigskip
+    \bigskip
+    \bigskip
+    \pause
+    \textbf{Boundary-to-boundary distance queries in directed grids:}\\
+    {\footnotesize \hfill No diagonal edges, arbitrary positive weights on horizontal and vertical edges.}
+    \begin{enumerate}
+        \item Static algorithm for repetitive grids: is $n^2$ needed for preprocessing plus $n$ queries?
+        \item Dynamic algorithm for integer weights $\{1,\ldots,W\}$? 
+        \begin{itemize}
+            \item Edge cost updates?
+            \item Row/column updates?
+        \end{itemize}
+        \item Dynamic reachability queries ($\{1,\infty\}$ weights)?
+    \end{enumerate}
+
+        \begin{tikzpicture}[overlay,remember picture]
+      \node<3->[text=MPIgreen] at ([xshift=2.7cm,yshift=.5cm]current page.center){\Huge Thank you!};
+      \end{tikzpicture}%
+
+\end{frame}
+
+
+\end{document}  

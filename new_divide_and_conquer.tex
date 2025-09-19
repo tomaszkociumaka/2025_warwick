@@ -1,0 +1,85 @@
+
+
+\def\W{12}
+\def\H{12}
+\def\cnt{6}
+\def\sizeofdot{4pt}
+\def\gp{0.0}
+%\draw[black,thin] (-1,-1) grid (\H + 1,\W + 1);
+
+
+
+\draw<1>[line width=3pt, white, line cap=round] (0, 0) -- (1, 1) -- (1, 1.5) -- (4.5, 5) -- (5.5, 5) -- (6.5, 6) -- (6.5, 8) -- (9, 10.5) -- (10.5, 10.5) -- (\H, \W);
+
+
+\draw<2->[line width=3pt, orange!30, line cap=round] (0, 0) -- (1, 1) -- (1, 1.5) -- (4.5, 5) -- (5.5, 5) -- (6.5, 6) -- (6.5, 8) -- (9, 10.5) -- (10.5, 10.5) -- (\H, \W);
+
+
+\node<1>[white] (XL) at (\H / 5, -1) {\Large $X_L$};
+\node<1-2> (XL) at (\H / 5, -1) {\textcolor{white}{\Large $X_L$}};
+\node<3-> (XL) at (\H / 5, -1) {\Large $X_L$};
+\node<3-> (XR) at (4 * \H / 5, -1) {\Large $X_R$};
+
+\node<-2>[white] (YL) at (-1, \W/5) {\Large $Y_L$};
+\node<-2>[white] (YR) at (-1, 4*\W/5) {\Large $Y_R$};
+
+\node<3-> (YL) at (-1, \W/5) {\Large $Y_L$};
+\node<3-> (YR) at (-1, 4*\W/5) {\Large $Y_R$};
+
+
+
+\draw<7->[latex-latex] (\H / 3, -0.3) to node[midway, above] {$\sed = \Theta(k)$} (2 * \H / 3, -0.3);
+\draw<7->[latex-latex] (\H / 3, -0.3) -- (\H / 2, -0.3); 
+\draw<7->[latex-latex] (2*\H / 3, -0.3) -- (\H / 2, -0.3); 
+\draw<7->[dashed, gray] (\H / 3, 0) -- (\H / 3, \W);
+\draw<7->[dashed, gray] (2 * \H / 3, 0) -- (2 * \H / 3, \W);
+
+\draw<11->[latex-latex] (\H / 3, -0.3) -- (19* \H / 48, -0.3); 
+\draw<11->[latex-latex] (19*\H / 48, -0.3) -- (\H / 2, -0.3);  
+\draw<11->[latex-latex] (\H / 2, -0.3) -- (15*\H / 24, -0.3);
+\draw<11->[latex-latex] (15*\H / 24, -0.3) -- (2*\H / 3, -0.3);
+
+
+\draw<11->[dashed, gray] (19*\H / 48, 0) -- (19*\H / 48, \W);
+\draw<11->[dashed, gray] (15*\H / 24, 0) -- (15*\H / 24, \W);
+
+
+\draw<4->[line width=3pt, violet!30, line cap=round] (0, 0) -- (1.5, 0) -- (4, 2.5) -- (4, 3.5) -- (4.5,4) -- (4.5,5) -- (5, 5.5) -- (\H / 2, 5.5);
+\draw<5->[line width=3pt, red!30, line cap=round] (\H / 2, 5.5) -- (6, 6.5) -- (7.5, 8) -- (8.5, 8) -- (11, 10.5) -- (11, 11) -- (\H, \W);
+
+
+\draw<10->[line width=3pt, blue!50,line cap=round] (\H / 3, 4.5) -- (4.5, 5) -- (6.5, 5) -- (7.5, 6) -- (7.5, 8) -- (8, 8.5) -- (2 * \H / 3, 9.5);
+
+\node<11-13>[circle,draw=blue, fill=blue, inner sep=0pt,minimum size=\sizeofdot] (olddot) at (4.5,5) {};
+\node<11-13>[circle,draw=blue, fill=blue, inner sep=0pt,minimum size=\sizeofdot] (olddot) at (7.5,8) {};
+
+\node<12-13>[circle,draw=darkgreen, fill=darkgreen, inner sep=0pt,minimum size=\sizeofdot] (olddot) at (5.5,5.5) {};
+\node<12-13>[circle,draw=darkgreen, fill=darkgreen, inner sep=0pt,minimum size=\sizeofdot] (olddot) at (7,7.5) {};
+
+\node<14->[circle,draw=darkgreen, fill=darkgreen, inner sep=0pt,minimum size=\sizeofdot] (olddot) at (4.5,5) {};
+\node<14->[circle,draw=darkgreen, fill=darkgreen, inner sep=0pt,minimum size=\sizeofdot] (olddot) at (7.5,8) {};
+
+\draw<13>[line width=1.5pt, darkgreen!70, line cap=round] (0, 0) -- (1.5, 0) -- (4, 2.5) -- (4, 3.5) -- (4.5, 4) -- (4.5,5)-- (5,5.5) -- (5.5, 5.5);
+
+\draw<13>[line width=1.5pt, darkgreen!70, line cap=round] (7, 7.5) -- (7.5, 8) -- (8.5, 8) -- (11, 10.5) -- (11, 11) -- (\H, \W);
+
+
+\draw<14>[line width=1.5pt, darkgreen!70, line cap=round] (0, 0) -- (1.5, 0) -- (4, 2.5) -- (4, 3.5) -- (4.5, 4) -- (4.5,5);
+
+\draw<14>[line width=1.5pt, darkgreen!70, line cap=round] (7.5, 8) -- (8.5, 8) -- (11, 10.5) -- (11, 11) -- (\H, \W);
+
+\draw<15->[line width=1.5pt, darkgreen!70, line cap=round](0, 0) -- (1.5, 0) -- (4, 2.5) -- (4, 3.5) -- (4.5, 4) -- (4.5,5) -- (6.5, 5) -- (7.5, 6) -- (7.5, 8) -- (8.5, 8) -- (11, 10.5) -- (11, 11) -- (\H, \W);
+
+\draw<3->[dashed, gray] (0, 5.5) -- (\H, 5.5);
+
+\draw<4>[very thick, violet, fill=violet, fill opacity=0.2] (0, 0) rectangle (\H / 2, 5.5);
+\draw<5>[very thick, red, fill=red, fill opacity=0.2] (\H / 2, 5.5) rectangle (\H, \W);
+
+\node<3->[circle,draw=orange, fill=orange, inner sep=0pt,minimum size=\sizeofdot] (olddot) at (\H / 2, 5.5) {};
+
+\draw[thick] (0, 0) rectangle (\H, \W);
+\draw<3-> (\H / 2, 0) -- (\H / 2, \W);
+\draw<9>[blue, thick] (\H / 3, 4.5) rectangle (2 * \H / 3, 9.5);
+\draw<10>[very thick, blue, fill= blue, fill opacity=0.2] (\H / 3, 4.5) rectangle (2 * \H / 3, 9.5);
+
+

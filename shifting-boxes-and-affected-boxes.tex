@@ -1,0 +1,77 @@
+
+\def\shft{0}
+\def\W{12}
+\def\H{12}
+\def\myi{2}
+\def\cnt{6}
+\def\gp{2}
+\def\kp{1}
+\def\strlen{12}
+\def\charwidth{1 / 15}
+%\draw[black,thin] (-1,-1) grid (\H + 1,\W + 1);
+
+ \foreach \iter in {0,1,...,{\the\numexpr 3 * \gp}} {
+     \foreach \x in {1,2,...,{\the\numexpr \strlen + 1}} {
+        \ifthenelse{\x > \strlen}{
+            \ifthenelse{\iter > 0}{
+                \fill<{\the\numexpr \iter + 1}>[red!50] (-0.1, \x * \H / \strlen) rectangle (-0.4, \x* \H / \strlen - \H/\strlen);
+            }{}
+        }{
+            \ifthenelse{\(\x < \iter\) \OR \(\x = \iter\)}{
+                \fill<{\the\numexpr \iter + 1}>[green!50] (-0.1, \x * \H / \strlen) rectangle (-0.4, \x* \H / \strlen - \H/\strlen);
+            }{}
+        }
+    }
+    \draw<{\the\numexpr \iter + 1}> (-0.1, 0) rectangle (-0.4,\H);
+    \foreach \x in {0,\gp,...,{\the\numexpr \W - \gp}}
+        \draw<{\the\numexpr \iter + 1}>[fill=darkblue!40, thick] (\x, {min(max(\x - \kp + \iter, 0), \H)}) rectangle (\x + \gp, {min(\x + \kp + \gp + \iter, \H)});
+}
+
+\foreach \iter in {8,9,...,12} {
+    \foreach \x in {0,1,...,{\the\numexpr \cnt - 1}} {
+        \ifthenelse{\(\x = 1 \AND \iter > 8\) \OR \(\x = 4 \AND \iter > 9\) \OR \(\x = 3 \AND \iter > 10\) \OR \(\x = 5 \AND \iter > 10\)}{
+            \draw<\iter>[fill=darkblue!70, thick] (\x * \gp, {max(\x * \gp - 2*\kp, 0)}) rectangle (\x * \gp + \gp, {min(\x * \gp + \gp + 2*\kp, \H)});
+        }{
+            \draw<\iter>[fill=darkblue!40, thick] (\x * \gp, {max(\x * \gp - 2*\kp, 0)}) rectangle (\x * \gp + \gp, {min(\x * \gp + \gp + 2*\kp, \H)});
+        }
+    }
+}
+
+\draw[fill=darkgreen!40] (0, 0) -- (\kp, 0) -- (\H, \W - \kp) -- (\H, \W) -- (\H - \kp, \W) -- (0, \kp) -- (0, 0);
+
+\onslide<8->{
+\draw[dashed] (0,\myi * \gp - 2*\kp) node[left] {$x_{\myi} - 2k$} -- (\myi * \gp,\myi * \gp - 2*\kp);
+\draw[dashed] (0,\myi * \gp + \gp + 2*\kp) node[left] {$x_{\the\numexpr \myi + 1} + 2k$} -- (\myi * \gp,\myi * \gp + 2*\kp+ \gp);
+}
+
+\draw<9->[fill=orange, thick,opacity=0.4] (1.5 * \gp - 1.0 * \gp * \charwidth, 0) rectangle (1.5 * \gp + 1.0 * \gp * \charwidth, \H);
+\draw<10->[fill=orange, thick,opacity=0.4] (4.2 * \gp - 1.0 * \gp * \charwidth, 0) rectangle (4.2 * \gp + 1.0 * \gp * \charwidth, \H);
+\draw<11->[fill=orange, thick,opacity=0.4] (0, 4.7 * \gp - 1.0 * \gp * \charwidth) rectangle (\W, 4.7 * \gp + 1.0 * \gp * \charwidth);
+
+\foreach \iter in {0,1,...,{\the\numexpr 3 * \gp}} {
+    \foreach \x in {0,\gp,...,{\the\numexpr \W - \gp}}
+        \draw<{\the\numexpr \iter + 1}> (\x, {min(max(\x - \kp + \iter, 0), \H)}) rectangle (\x + \gp, {min(\x + \gp + \kp + \iter, \H)});
+}
+
+%\foreach \x in {0,\gp,...,{\the\numexpr \W - \gp}}
+%    \draw<8> (\x, {max(\x - \gp, 0)}) rectangle (\x + \gp, {min(\x + \gp + \gp, \H)});
+
+\foreach \iter in {8,9,...,12} {
+    \foreach \x in {0,1,...,{\the\numexpr \cnt - 1}} {
+        \draw<\iter> (\x * \gp, {max(\x * \gp - 2*\kp, 0)}) rectangle (\x * \gp + \gp, {min(\x * \gp + \gp + 2*\kp, \H)});
+    }
+}
+
+\draw[thick] (0, 0) rectangle (\H, \W);
+
+\draw (0,0.1) -- (0,0) node[above] {$x_0$};
+\draw (\W,0.1) -- (\W,0) node[above] {$x_{\cnt}$};
+\foreach \x in {1,2,...,{\the\numexpr \cnt - 1}}
+    \draw (\x * \gp,0.1) -- (\x * \gp, -0.1) node[above] {$x_{\x}$};
+
+
+
+%\foreach \x in {0,1,...,{\the\numexpr \cnt - 1}} {
+%    \draw<9->[thick] (\gp * \x, {max(\gp * \x - \gp, 0)}) -- (\gp * \x + \gp, {max(\gp * \x - \gp, 0)}) -- (\gp * \x + \gp, \gp * \x);
+%    \draw<9->[thick] (\gp * \x, {min(\gp * \x + \gp, \H)}) -- (\gp * \x, {min(\gp * \x + 2 * \gp, \H)}) -- (\gp * \x + \gp, {min(\gp * \x + 2 * \gp, \H)});
+%}

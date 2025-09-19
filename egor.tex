@@ -1,0 +1,973 @@
+
+%\begin{frame}{Edit Distance}
+%
+%  \begin{block}{Edit distance $\ed(X,Y)$ \hfill Levenshtein distance [Lev65]}
+%      Minimum number of character insertions, deletions, and substitutions that transform $X$ to $Y$.
+%  \end{block}
+%  
+%  \begin{center}
+%  \begin{tikzpicture}
+%    
+%    \begin{scope}[xscale=0.3,yscale=-1]
+%    \draw (-1,0) node{$X:$};
+%    \draw (-1,1) node{$Y:$};
+%    \foreach \x [count=\i] in {b,\textcolor{red}{b},a,b,a,b,\textcolor{red}{b},a,a,b}{
+%      \draw (\i,0) node {$\mathtt{\vphantom{ab}\x}$};
+%    }
+%    \foreach \x [count=\i] in {b,a,b,a,b,\textcolor{red}{a},a,a,b,\textcolor{red}{b}}{
+%        \draw (\i,1) node {$\mathtt{\vphantom{ab}\x}$};
+%    }
+%    \foreach \x/\y in {1/1,3/2,4/3,5/4,6/5,8/7,9/8,10/9}{
+%      \draw[thick] (\x,0.2) -- (\y,0.9);
+%    }
+%    \foreach \x/\y in {7/6}{
+%      \draw[thick,red,densely dashed] (\x,0.2) -- (\y,0.9);
+%    }
+%  
+%  
+%    \draw (20,0.5) node {$\ed(X,Y)=3$};
+%    \end{scope}
+%  \end{tikzpicture}
+%  \end{center}
+%  
+%  \end{frame}
+
+
+\begin{frame}{Weighted Edit Distance}
+    \vfill
+    \begin{block}{Weighted Edit Distance $\wed(X,Y)$ \hfill $w \colon (\Sigma \cup \{\varepsilon\}) \times (\Sigma \cup \{\varepsilon\}) \to \RR_{\ge 0}$}
+        The minimum cost of transforming $X$ into $Y$ by editing individual characters, where:
+        \begin{itemize}
+            \item inserting $b$ costs $w(\varepsilon, b)$;
+            \item deleting $a$ costs $w(a, \varepsilon)$;
+            \item substituting $a$ for $b$ costs $w(a, b)$.
+        \end{itemize}
+    \end{block}
+  
+  %\begin{center}
+%\begin{tikzpicture}
+%    \matrix[matrix of nodes,
+%    nodes={minimum size=6mm, text centered, draw, font=\bfseries},
+%    column sep=-\pgflinewidth, row sep=-\pgflinewidth,
+%    nodes in empty cells,
+%    anchor=north west
+%  ] (m) at (0,0) {
+%    w & $\varepsilon$ & $a$ & $b$ \\
+%    $\varepsilon$ & 0 & 1 & 3 \\
+%    $a$ & 1 & 0 & 2 \\
+%    $b$ & 3 & 2 & 0 \\
+%  };
+%\end{tikzpicture}
+    \vspace*{0.5cm}
+  \begin{tikzpicture}
+      \hspace*{1.3cm}
+    \begin{scope}[xscale=0.3,yscale=-1]
+    %\matrix (first) [table,text width=6em]
+    %\matrix[matrix of nodes,
+    %      nodes={draw, minimum size=10mm, anchor=center},
+    %      column sep=-\pgflinewidth, row sep=-\pgflinewidth] (m) {
+    
+    %    1 & 2 & 3 \\
+    %    4 & 5 & 6 \\
+    %    7 & 8 & 9 \\
+    %};
+    
+    %\matrix (m) at (-10, 0) {
+    %\node{3} & \node{2} \\
+    %\node{4} & \node{5} \\
+    %};
+    \def\st{10}
+    \def\sx{\st-12}
+    \def\sy{-0.3}
+    \def\sizx{1.3333333}
+    \def\sizy{0.4}
+    \foreach \x in {0,1,2,3,4}{
+        \draw (\sx + \sizx * \x, \sy) -- (\sx + \sizx * \x, \sy + \sizy * 4);
+    }
+    \foreach \y in {0,1,2,3,4}{
+        \draw (\sx, \sy + \sizy * \y) -- (\sx + \sizx * 4, \sy + \sizy * \y);
+    }
+    \foreach \ch/\r/\c in {w:/1.3/-1.7,\varepsilon/0/1,\mathtt{a}/0/2,\mathtt{b}/0/3,\varepsilon/1/0,0/1/1,1/1/2,4/1/3,\mathtt{a}/2/0,1/2/1,0/2/2,2/2/3,\mathtt{b}/3/0,3/3/1,2/3/2,0/3/3}{
+        \draw<1> (\sx + \sizx * \c + \sizx * 0.5, \sy + \sizy * \r + \sizy * 0.5) node {$\mathtt{\vphantom{ab}}\ch$};
+    }
+    \foreach \ch/\r/\c in {w:/1.3/-1.7,\varepsilon/0/1,\mathtt{a}/0/2,\mathtt{b}/0/3,\varepsilon/1/0,0/1/1,1/1/2,1/1/3,\mathtt{a}/2/0,1/2/1,0/2/2,1/2/3,\mathtt{b}/3/0,1/3/1,1/3/2,0/3/3}{
+        \draw<2-> (\sx + \sizx * \c + \sizx * 0.5, \sy + \sizy * \r + \sizy * 0.5) node {$\mathtt{\vphantom{ab}}\ch$};
+    }
+    
+
+    \draw (\st-1,0) node{$X:$};
+    \draw (\st-1,1) node{$Y:$};
+
+    \foreach \x [count=\i] in {b,b,a,b,a,\textcolor{red}{b},b,\textcolor{red}{a},\textcolor{red}{a},b}{
+      \draw<1> (\st+\i,0) node {$\mathtt{\vphantom{ab}\x}$};
+    }
+    \foreach \x [count=\i] in {b,\textcolor{red}{a},b,a,b,a,\textcolor{red}{a},\textcolor{red}{a},b,b}{
+        \draw<1> (\st+\i,1) node {$\mathtt{\vphantom{ab}\x}$};
+    }
+    \foreach \x/\y in {1/1,2/3,3/4,4/5,5/6,7/9,10/10}{
+      \draw<1>[thick] (\st+\x,0.2) -- (\st+\y,0.9);
+    }
+    \foreach \x/\y in {6/7}{
+      \draw<1>[thick,red,densely dashed] (\st+\x,0.2) -- (\st+\y,0.9);
+    }
+    
+
+    \foreach \x [count=\i] in {b,\textcolor{red}{b},a,b,a,b,\textcolor{red}{b},a,a,b}{
+      \draw<2-> (\st+\i,0) node {$\mathtt{\vphantom{ab}\x}$};
+    }
+    \foreach \x [count=\i] in {b,a,b,a,b,\textcolor{red}{a},a,a,b,\textcolor{red}{b}}{
+        \draw<2-> (\st+\i,1) node {$\mathtt{\vphantom{ab}\x}$};
+    }
+    \foreach \x/\y in {1/1,3/2,4/3,5/4,6/5,8/7,9/8,10/9}{
+      \draw<2->[thick] (\st+\x,0.2) -- (\st+\y,0.9);
+    }
+    \foreach \x/\y in {7/6}{
+      \draw<2->[thick,red,densely dashed] (\st+\x,0.2) -- (\st+\y,0.9);
+    }
+    
+  
+  
+    \draw<1> (\st+20,0.5) node {$\wed(X,Y)=6$};
+    \draw<2-> (\st+20,0.5) node {$\ed(X,Y)=3$};
+    \end{scope}
+  \end{tikzpicture}
+  \vfill
+\end{frame}
+
+\begin{frame}<1>{State of the Art}
+    \input{state-of-the-art-slide}
+\end{frame}
+
+
+\begin{frame}<1,2,5>{Alignment Graph and the $\Oh(n^2)$-Time Algorithm}
+
+  \begin{center}
+    \begin{tikzpicture}[x=0.625cm, y=-0.625cm]
+      \draw[white] (-1,-1) -- (11,11);
+      \filldraw<6->[line width=7pt,black!20] (0,0)--(3,0) -- (10,7) -- (10,10)-- (7,10) -- (0,3) -- cycle;
+      \onslide<2,5->{
+      \draw[line width=7pt, blue!30,line cap=round](0,0) -- (1,1) -- (2,1) -- (10,9) -- (10,10);
+      \begin{scope}[x=0.3cm,y=-1cm,xshift=7.2cm,yshift=-2.75cm]
+        \foreach \x [count=\i] in {b,\textcolor{darkred}{b},a,b,a,b,\textcolor{darkred}{b},a,a,b}{
+          \draw (\i,0) node {$\mathtt{\vphantom{ab}\x}$};
+        }
+        \foreach \x [count=\i] in {b,a,b,a,b,\textcolor{darkred}{a},a,a,b,\textcolor{darkred}{b}}{
+            \draw (\i,1) node {$\mathtt{\vphantom{ab}\x}$};
+        }
+        \foreach \x/\y in {1/1,3/2,4/3,5/4,6/5,8/7,9/8,10/9}{
+          \draw[thick,darkgreen] (\x,0.2) -- (\y,0.9);
+        }
+        \foreach \x/\y in {7/6}{
+          \draw[thick,darkred,densely dashed] (\x,0.2) -- (\y,0.9);
+        }
+      \end{scope}
+      }
+      \onslide<3>{
+        \draw[line width=7pt, blue!30,line cap=round](0,0) -- (1,0) -- (9,8) -- (9,9) -- (10,10);
+        \begin{scope}[x=0.3cm,y=-1cm,xshift=7.2cm,yshift=-2.75cm]
+          \foreach \x [count=\i] in {\textcolor{darkred}{b},b,a,b,a,b,\textcolor{darkred}{b},a,a,b}{
+            \draw (\i,0) node {$\mathtt{\vphantom{ab}\x}$};
+          }
+          \foreach \x [count=\i] in {b,a,b,a,b,\textcolor{darkred}{a},a,a,\textcolor{darkred}{b},b}{
+              \draw (\i,1) node {$\mathtt{\vphantom{ab}\x}$};
+          }
+          \foreach \x/\y in {2/1,3/2,4/3,5/4,6/5,8/7,9/8,10/10}{
+            \draw[thick,darkgreen] (\x,0.2) -- (\y,0.9);
+          }
+          \foreach \x/\y in {7/6}{
+            \draw[thick,darkred,densely dashed] (\x,0.2) -- (\y,0.9);
+          }
+        \end{scope}
+        }
+      \onslide<1-3>{
+      \bigpicture{\input{graph.tex}}
+      }
+      \onslide<4->{
+        \bigpicture{\input{graphdp.tex}}
+        }
+
+    \end{tikzpicture}
+  \end{center}
+  
+\end{frame}
+
+\begin{frame}<1-2>{State of the Art}
+    \input{state-of-the-art-slide}
+\end{frame}
+
+%\ begin{comment}
+
+\begin{frame}<5-7>{$\Oh(nk)$-Time Algorithm}
+
+  \begin{center}
+    \begin{tikzpicture}[x=0.625cm, y=-0.625cm]
+      \draw[white] (-1,-1) -- (11,11);
+      \filldraw<6->[line width=7pt,black!20] (0,0)--(3,0) -- (10,7) -- (10,10)-- (7,10) -- (0,3) -- cycle;
+      \onslide<6->{
+      \draw[line width=7pt, blue!30,line cap=round](0,0) -- (1,1) -- (2,1) -- (10,9) -- (10,10);
+      \begin{scope}[x=0.3cm,y=-1cm,xshift=7.2cm,yshift=-2.75cm]
+        \foreach \x [count=\i] in {b,\textcolor{darkred}{b},a,b,a,b,\textcolor{darkred}{b},a,a,b}{
+          \draw (\i,0) node {$\mathtt{\vphantom{ab}\x}$};
+        }
+        \foreach \x [count=\i] in {b,a,b,a,b,\textcolor{darkred}{a},a,a,b,\textcolor{darkred}{b}}{
+            \draw (\i,1) node {$\mathtt{\vphantom{ab}\x}$};
+        }
+        \foreach \x/\y in {1/1,3/2,4/3,5/4,6/5,8/7,9/8,10/9}{
+          \draw[thick,darkgreen] (\x,0.2) -- (\y,0.9);
+        }
+        \foreach \x/\y in {7/6}{
+          \draw[thick,darkred,densely dashed] (\x,0.2) -- (\y,0.9);
+        }
+      \end{scope}
+      }
+
+      \onslide<5-6>{
+        \bigpicture{\input{graphdp.tex}}
+        }
+        \onslide<7>{\bigpicture{\input{graphdp_nk.tex}}}
+
+    \end{tikzpicture}
+  \end{center}
+  
+\end{frame}
+
+\begin{frame}<3->{State of the Art}
+    \input{state-of-the-art-slide}
+\end{frame}
+
+
+  \begin{frame}{Self-Edit Distance \hfill Cassis, Kociumaka, Wellnitz; FOCS'23}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item Introduced for weighted $\ed$ \where{CKW23}.
+                \item Also used in quantum algorithms for unweighted $\ed$ \where{GJKT24,KNW24}.
+            \end{itemize}\pause
+            \begin{block}{Self-Edit Distance}
+                The self-edit distance $\sed(X)$ of a string $X$ is the unweighted distance from $(0, 0)$ to $(|X|, |X|)$ in the alignment graph of $X$ onto itself with the edges on the main diagonal removed.
+            \end{block}
+            \begin{itemize}
+                %\item<6-> $\sed(X)$ can be computed using $\Oh(k^2)$ LCE queries.
+                %\item<7-> The ``hardest'' case is when $\sed(X), \sed(Y)$ are low.
+                \item<6-> \tikzmark{left}Computing $\wed(X,Y)$ reduces to the case when $\sed(X), \sed(Y) = \Oh(k)$.\tikzmark{right}
+            \end{itemize}
+                \alt<7->{\DrawBoxWide*[very thick, red, fill=yellow, fill opacity=0.0]}{\DrawBoxWide*[very thick, white, fill=yellow, fill opacity=0.0]}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+            \begin{tikzpicture}[scale=0.55, y=-1cm, xshift=-5.3cm, yshift=6cm]
+                \draw[line width=7pt, white,line cap=round](0, 0) -- (11, 11);
+                \draw<3>[line width=7pt, blue!30,line cap=round](0, 0) -- (11, 11);
+                %\draw<5>[line width=7pt, blue!30,line cap=round](0, 0) -- (0, 1) -- (2, 3) -- (5, 3) -- (9, 7) -- (9, 10) -- (10, 11) -- (11, 11);
+                %\draw<6>[line width=7pt, blue!30,line cap=round](0, 0) -- (1, 0) -- (3, 2) -- (3, 3) -- (5, 3) -- (9, 7) -- (9, 10) -- (10, 11) -- (11, 11);
+                %\draw<6-7>[line width=7pt, blue!30,line cap=round](0, 0) -- (1, 0) -- (3, 2) -- (3, 3) -- (5, 3) -- (9, 7) -- (9, 9) -- (10, 9) -- (11, 10) -- (11, 11);
+                %\draw<8>[line width=7pt, blue!30,line cap=round](0, 0) -- (1, 0) -- (3, 2) -- (4, 3) -- (5, 3) -- (9, 7) -- (9, 9) -- (10, 9) -- (11, 10) -- (11, 11);
+                \draw<5->[line width=7pt, blue!30,line cap=round](0, 0) -- (1, 0) -- (3, 2) -- (4, 3) -- (5, 3) -- (9, 7) -- (9, 8) -- (10, 9) -- (11, 10) -- (11, 11);
+
+                \bigpicture{
+                    \input{sed-graph.tex}
+
+                    \draw<2-3>[-latex,very thick,darkgreen] (n0_0) -- (n1_1);
+                    \draw<2-3>[-latex,very thick,darkgreen] (n1_1) -- (n2_2);
+                    \draw<2-3>[-latex,very thick,darkgreen] (n2_2) -- (n3_3);
+                    \draw<2-3>[-latex,very thick,darkgreen] (n3_3) -- (n4_4);
+                    \draw<2-3>[-latex,very thick,darkgreen] (n4_4) -- (n5_5);
+                    \draw<2-3>[-latex,very thick,darkgreen] (n5_5) -- (n6_6);
+                    \draw<2-3>[-latex,very thick,darkgreen] (n6_6) -- (n7_7);
+                    \draw<2-3>[-latex,very thick,darkgreen] (n7_7) -- (n8_8);
+                    \draw<2-3>[-latex,very thick,darkgreen] (n8_8) -- (n9_9);
+                    \draw<2-3>[-latex,very thick,darkgreen] (n9_9) -- (n10_10);
+                    \draw<2-3>[-latex,very thick,darkgreen] (n10_10) -- (n11_11);
+                }
+                %\draw<8->[red, very thick] (-15.5, 10.6) rectangle (-1.7,12.4);
+            \end{tikzpicture}
+            \end{center}
+            %*Picture of $\sed$ alignment graph, flip all parts below main diagonal*
+        \end{column}
+    \end{columns}
+  \end{frame}
+
+  
+
+
+\begin{frame}<-12>{Divide-and-Conquer Scheme of CKW23}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item<1-> \where{CKW23,GJKT24} use divide and conquer:
+                \begin{enumerate}
+                    \item<2-> Find out where the optimal alignment crosses the midpoint of $X$.
+                    \item<10-> Recursively compute the two halves of the optimal alignment.
+                \end{enumerate}
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \hfill
+            \begin{tikzpicture}[scale=0.5, y=-1cm]
+                    \bigpicture{
+                        \input{CKW_algorithm_divide_and_conquer.tex}
+                    }
+            \end{tikzpicture}
+            \hfill
+            %*Picture how small $\sed$ region in the middle gives the middle point and how the opt alignment intersects the small $\sed$ alignment; and how a change in $X_L$ may affect $Y_R$*
+        \end{column}
+    \end{columns}
+  \end{frame}
+
+%\begin{frame}{Traveling to the Conference}
+%    \begin{figure}
+%        \begin{center}
+%            \vspace{-1.3cm}
+%            \only<1>{\includegraphics[height=1.2\textheight]{pic/berlin-prague-2.pdf}}
+%            \only<2>{\hspace{-0.13cm}\includegraphics[height=1.2\textheight]{pic/berlin-prague-3.pdf}}
+%            \only<3>{\hspace{-0.26cm}\includegraphics[height=1.2\textheight]{pic/berlin-prague-4.pdf}}
+%            \only<4>{\hspace{-0.39cm}\includegraphics[height=1.2\textheight]{pic/berlin-prague-5.pdf}}
+%            \only<5>{\hspace{-0.39cm}\includegraphics[height=1.2\textheight]{pic/berlin-prague-6.pdf}}
+%        \end{center}
+%    
+%    \end{figure}
+%\end{frame}
+
+\begin{frame}<1-10,15>{New Simple and Robust Divide-and-Conquer Scheme}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+                \begin{itemize}
+                    \item<1->\tikzmark{left}Partition using a \textcolor{orange!75}{\emph{near-optimal}} alignment.
+                        %\begin{itemize}
+                        %    \item Compute the optimal alignment at the initialization phase \& minimally adjust it throughout the epoch of $\Oh(k)$ steps.
+                        %\end{itemize}
+                        \item<6-> The concatenation of optimal \textcolor{violet!60}{$X_L\onto Y_L$} and \textcolor{red!50}{$X_R\onto Y_R$} alignments does not need to be an optimal $X\onto Y$ alignment\alt<-6>{.}{\ldots}
+                        \item<7-> but it has to be fixed only within a region of small $\sed$.\tikzmark{right}
+                        \item<16-> Maintain an optimal alignment inside the middle part and (recursively) optimal alignments $X_L\onto Y_L$ and $X_R\onto Y_R$. 
+                    \item<17-> $\tOh(k)$-time updates in the general case.
+                    \begin{itemize}
+                        \item<18-> De-amortized using standard techniques.
+                    \end{itemize}
+                \end{itemize}
+                \alt<-7>{\DrawBoxWide*[very thick, white, fill=yellow, fill opacity=0.0]}{\DrawBoxWide*[very thick, red, fill=yellow, fill opacity=0.0]}
+                
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \hfill
+            \begin{tikzpicture}[scale=0.5, y=-1cm]
+                    \bigpicture{
+                        \input{new_divide_and_conquer.tex}
+                    }
+
+            \end{tikzpicture}
+            \hfill
+            %*Picture of some alignment $\mathcal{A}$, optimal alignments for parts*
+        \end{column}
+    \end{columns}
+  \end{frame}
+
+  \begin{frame}<21-26>{Self-Edit Distance vs Repetitiveness}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Key Observation\hfill [CKW23]}
+                If $\sed(X)\le k$, then $X$ can be decomposed into $\le k$ characters and $\le k$ fragments with a \emph{previous occurrence} $\le k$ positions earlier.
+            \end{block}
+            \bigskip
+            \onslide<26->{
+            \textbf{Corollary:}            
+            If $\sed(X)\le k$, then 
+            }
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \vspace*{-0.4cm}
+            \centering
+            \begin{tikzpicture}[scale=0.53, y=-1cm]
+                \bigpicture{
+                    \input{copy-paste-decomposition.tex}
+                    \input{small-sed-string-decomposition.tex}
+                }%
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+  \end{frame}
+
+
+\begin{frame}{Small Self-Edit Distance Algorithm of CKW23}
+    \vspace*{-0.32cm}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item<1-> The optimal path stays within a band of width $\Oh(k)$.
+                \item<2-> Cover the band with $\Oh(\frac{n}{k})$ boxes of size $\Oh(k)\times \Oh(k)$.
+                \item<3-> If $\sed(X) \le k$, string $X$ consists of $\Oh(k)$ parts with period $\Theta(k)$ each.
+                \item<6-> Optimal path crosses each $V_i$.
+                \item<7-> Compute $\Oh(k)$ distance matrices in $\tOh(k^2)$ time each.
+                \item<8-> Compute $\tOh(k)$ min-plus matrix products in $\Oh(k^2)$ time each using SMAWK.
+                    \begin{itemize}
+                        \item<9-> \tikzmark{left}For constantly bounded integer weights, distance matrices can be min-plus multiplied in $\tOh(k)$ time \where{Tis08, Rus10, G\textbf{G}K24}.\tikzmark{right}
+                    \end{itemize}
+                \alt<10->{\DrawBoxWide*[very thick, red, fill=yellow, fill opacity=0.0]}{\DrawBoxWide*[very thick, white, fill=yellow, fill opacity=0.0]}
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+            \begin{tikzpicture}[transform canvas={scale=0.55}, y=-1cm, xshift=-5.3cm, yshift=6cm]
+                \bigpicture{
+                    \input{boxes-stripe-D.tex}
+                }
+            \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+  \begin{frame}{Relationship between Distinct Boxes}
+    \begin{columns}
+        \begin{column}{0.6\textwidth}%
+            \only<2-16>{%
+            \textbf{Recall:} If $\sed(X)\le k$, then $X$ can be decomposed into $\le k$ single characters and $\le k$ fragments with a \emph{previous occurrence} $\le k$ positions earlier.
+            }
+            \only<17->{
+            \begin{itemize}
+                    \item<17-> $X_i, Y_i$ can be constructed from $X_{i - 1}, Y_{i - 1}$ with character appends, copy-pastes, and a prefix removal.
+                    %\item<16-> $Y_i$ can be constructed from $Y_{i - 1}$ with character appends, copy-pastes, and a prefix removal.
+                    \item<18-> Known unbounded dynamic algorithm \where{CKM20} works for \emph{unweighted} edit distance with character insertions, deletions, and substitutions as updates.
+                    \item<19-> We extend this algorithm to work with small integer weights, copy-pastes, and substring removals.
+                    \item<20-> $\tOh(k)$ time per update, $\tOh(k)$ updates across all distinct boxes.
+                    \item<21-> $\tOh(k^2)$ time in total to compute all $\Oh(k)$ distance matrices.
+                \end{itemize}
+            }
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \vspace*{-0.4cm}
+            \begin{center}
+            \begin{tikzpicture}[scale=0.53, y=-1cm]
+                \bigpicture{
+                    \input{distinct_boxes.tex}
+                }
+            \end{tikzpicture}
+        \end{center}
+            %*Picture of self-alignment again showing equal phrases*
+        \end{column}
+    \end{columns}
+  \end{frame}
+
+  \begin{frame}{Overview}
+      \begin{itemize}
+          \item<1-> Use the novel divide-and-conquer scheme to reduce the problem to the case of small self-edit distance.
+          \item<2-> Use the result of \where{CKW23} to decompose the graph into $\Theta(k) \times \Theta(k)$-sized boxes where at most $\Oh(k)$ boxes differ from the previous one.
+          \item<3-> Initialize the novel dynamic algorithm for the first box in $\tOh(k^2)$ time.
+          \item<4-> Transform the dynamic algorithm through all distinct boxes using $\tOh(k)$ updates implemented in $\tOh(k)$ time each.
+          \item<5-> Use the dynamic algorithm to obtain all distance matrices.
+          \item<6-> Exponentiate and multiply distance matrices using \where{G\textbf{G}K24} to obtain the answer.
+      \end{itemize}
+  \end{frame}
+
+
+\begin{frame}<5,8,9>[label=current]{Summary}
+  %\textbf{Weighted edit distance:}
+    \begin{itemize}
+      \item<1-> Static algorithms:
+      \begin{itemize}
+          \item<2-> $\Oh(n + k^2)$ for unit weights (tight if $k \le n$);\hfill \where{LV88}
+        \item<3-> $\Ohtilde(n+\sqrt{nk^3})$ for arbitrary normalized weights (tight if $\sqrt{n}\le k \le n$);\hfill \where{CKW23}
+        \item<4-> $\Ohtilde(n+Wk^2)$ for weights in $[0\dd W]$ (tight if $k \le n$ and $W = n^{o(1)}$);\hfill \thiswork
+        \item<5-> $\Ohtilde(n+k^{2.5})$ for arbitrary \emph{integer} weights;\hfill \thiswork
+      \end{itemize}
+      \item<6-> Dynamic algorithms:
+      \begin{itemize}
+        \item<6-> $\Ohtilde(n)$ for unit weights (tight);\hfill \where{CKM20}
+        \item<7-> $\Ohtilde(k^2)$ for unit weights;
+        \item<7-> $\Ohtilde(k^3)$ for arbitrary normalized weights;
+        \item<8-> $\Ohtilde(W^2k)$ for weights in $[0\dd W]$ (tight if $k \le n$ and $W = n^{o(1)}$).\hfill \thiswork
+      \end{itemize}
+    \end{itemize}
+
+    \begin{tikzpicture}[overlay,remember picture]
+      \node<9->[text=MPIgreen] at ([xshift=2.7cm,yshift=-3cm]current page.center){\Huge Thank you!};
+      \end{tikzpicture}%
+\end{frame}
+
+\begin{frame}{} 
+  
+  \end{frame}
+
+
+
+
+
+
+\begin{comment}
+
+   
+% \begin{frame}{Substitutions Only}
+%     \vspace{-.3cm}
+%     \begin{columns}
+%         \begin{column}{0.5\textwidth}
+%             \begin{itemize}
+%                 \item<1-> The optimal path stays within a band of width $\Oh(k)$.
+%                 \item<2-> Cover the band with $\Oh(\frac{n}{k})$ boxes of size $\Oh(k)\times \Oh(k)$.
+%                 \item<3-> Optimal path crosses each $V_i$.
+%                 \item<4-> $D_{i, j}$: the matrix of distances $V_i\leadsto V_j$.
+%                 \item<5-> $\tOh(k^2 \cdot \frac{n}{k}) = \tOh(nk)$ time for initializing distance matrices of all boxes.
+%                 \item<6-> $\tOh(k)$ time per update for recomputing the distance matrices of affected boxes.
+%                 %\item<7-> \fcolorbox{red}{white}{$D_{i, j}$'s are the so-called \emph{Monge} matrices, and they can be encoded in $\Oh(k)$ space. Moreover, they can be $(\min, +)$-multiplied in $\tOh(k)$ time (see \where{Tis08, Rus10, Gthis work}).}
+%                 %\item<7-> \vspace{-.3cm}\begin{tcolorbox}[colframe=red, colback=white, boxrule=0.3mm, sharp corners] 
+%                 %            $D_{i, j}$'s are the so-called \emph{Monge} matrices, and they can be encoded in $\Oh(k)$ space. Moreover, they can be $(\min, +)$-multiplied in $\tOh(k)$ time (see \where{Tis08, Rus10, Gthis work}). 
+%                 %        \end{tcolorbox}
+%                 \item<8-> \tikzmark{left}$D_{i, j}$'s are the so-called \emph{Monge} matrices, and they can be encoded in $\Oh(k)$ space. Moreover, they can be $(\min, +)$-multiplied in $\tOh(k)$ time (see \where{Tis08, Rus10, Gthis work}).\tikzmark{right}
+%             \end{itemize}
+%                 \alt<9->{\DrawBoxWide*[very thick, red, fill=yellow, fill opacity=0.0]}{\DrawBoxWide*[very thick, white, fill=yellow, fill opacity=0.0]}
+%         \end{column}
+%         \begin{column}{0.5\textwidth}
+%             \begin{center}
+%             \begin{tikzpicture}[transform canvas={scale=0.55}, y=-1cm, xshift=-5.3cm, yshift=6cm]
+%                 \bigpicture{\input{boxes-stripe-D.tex}}
+%                 %\draw<9->[red, very thick] (-15.5, 8.6) rectangle (-1.7,12.4);
+%             \end{tikzpicture}
+%             \end{center}
+%         \end{column}
+%     \end{columns}
+%   \end{frame}
+
+%\ begin{comment}
+
+\begin{frame}<-5,9->{Distance Matrix \hfill AALM, SICOMP'90; Schmidt, SICOMP'98}
+  \vspace{-.3cm}
+  \begin{columns}%
+    \begin{column}{.5\textwidth}%
+  \begin{center}
+    \begin{tikzpicture}[x=0.625cm, y=-0.625cm]
+      \draw[white] (-1,-1) -- (11,11);
+
+      \draw<3,9>[line width=7pt, blue!30,line cap=round](0,0) -- (1,1) -- (2,1) -- (10,9) -- (10,10);
+      \draw<4,9>[line width=7pt, teal!30,line cap=round](0,2) -- (1,3) -- (2,3) -- (5,6) -- (8,6) -- (9,7) -- (10,7);
+      \draw<10>[line width=7pt, orange!30,line cap=round](0,0) -- (1,1) -- (2,1) -- (7,6) -- (8,6) -- (9,7) -- (10,7);
+      \draw<10>[line width=7pt, red!30,line cap=round](0,2) -- (1,3) -- (2,3) -- (5,6) -- (7,6) -- (10,9) -- (10,10);
+      \draw<11>[line width=7pt, orange!30,line cap=round](0,0) -- (1,1) -- (2,1) -- (6,5) -- (7,5) -- (9,7) -- (10,7);
+      \draw<11>[line width=7pt, red!30,line cap=round](0,2) -- (1,3) -- (2,3) -- (5,6) -- (7,6) -- (10,9) -- (10,10);
+      \draw<6-7>[line width=7pt, blue!30,line cap=round](0,2) -- (1,3) -- (2,3) -- (1,2) -- (1,1) -- (0,0) -- (1,0) -- (6,5) -- (7,5)-- (9,7) -- (10,7);
+      \draw<7>[line width=7pt, blue!60,line cap=round](2,3) -- (4,3);
+
+
+      \onslide<-4>{
+      \bigpicture{\input{graph.tex}}
+      }
+      \onslide<5->{
+        \bigpicture{\input{graph_un.tex}}
+      }
+
+      \foreach \y[evaluate={\lb=int(10-\y);}] in {1,...,10}{
+        \draw (n0_\y) node[above=-2] {\scriptsize $\lt_{\lb}$};
+      }
+      \foreach \x[evaluate={\lb=int(10+\x);}] in {0,...,10}{
+        \draw (n\x_0) node[above=-2] {\scriptsize $\lt_{\lb}$};
+      }
+
+      \foreach \y[evaluate={\lb=int(20-\y);}] in {0,...,9}{
+        \draw (n10_\y) node[below=-2] {\scriptsize $\br_{\lb}$};
+      }
+      \foreach \x in {0,...,10}{
+        \draw (n\x_10) node[below=-2] {\scriptsize $\br_{\x}$};
+      }
+
+    
+
+    \end{tikzpicture}
+  \end{center}
+\end{column}%
+  \begin{column}{.5\textwidth}%
+    \begin{center}   
+      $D_{X,Y}[i,j] = \dist(\lt_i,\br_j)$
+      \pause
+      \begin{tikzpicture}[xscale=0.3, yscale=-0.3]
+
+        \fill<3,8->[blue!30] (9.5,9.5) rectangle (10.5, 10.5);
+        \fill<4,6->[teal!30] (12.5,7.5) rectangle (13.5, 8.5);
+
+        \fill<10->[orange!30] (12.5,9.5) rectangle (13.5, 10.5);
+        \fill<10->[red!30] (9.5,7.5) rectangle (10.5, 8.5);
+
+        \bigpicture{\input{dist.tex}}
+
+        \filldraw<12> (12.5,8.5) circle(0.1);
+
+        \fill<14>[opacity=0.15] (-0.5,-0.5) rectangle (10,8);
+
+        \end{tikzpicture}
+    \end{center}
+  \end{column}%
+\end{columns}%
+
+\end{frame}
+
+
+\begin{frame}{Core-Sparse Monge Matrices}
+  \begin{alertblock}{Monge Matrix}
+    A matrix $M\in \mathbb{R}^{n\times m}$ is a \textbf{Monge} matrix if, for every $i\in [0\dd n-1)$ and $j\in [0\dd m-1)$,
+    
+    {\hfill  $M^{\square}[i,j]:=M[i+1,j]+M[i,j+1]-M[i+1,j+1]-M[i,j]\ge 0.$\hfill \;}
+  \end{alertblock}
+  \pause
+    \[M[i,j] = M[i,0] + M[0,j] - M[0][0] - \sum_{i'=0}^{i-1}\sum_{j'=0}^{j-1} M^\square[i',j']\]
+  \pause 
+  \begin{fact}[Core-Sparse Representation {[Wil85]}]
+    If $M\in \mathbb{R}^{n\times m}$ and $M^\square$ has $c$ non-zero entries, then $M$ can be stored in $\Oh(n+m+c\log c)$ space so that $M[i,j]$ can be computed in $\Oh(\log c)$ time.
+  \end{fact}
+
+  \pause\medskip
+  \textbf{Observation:}
+  $D_{X,Y}\in \mathbb{Z}_{\ge 0}^{(|X|+|Y|+1)\times (|X|+|Y|+1)}$ is Monge, and its core size is $\le 2(|X|+|Y|)$.
+
+\end{frame}
+
+
+\begin{frame}{Min-Plus Product of Core-Sparse Monge Matrices}
+
+  \begin{fact}[{[SMAWK87]}]
+    If $A,B\in \mathbb{R}^{n\times n}$ are Monge matrices, then $A\otimes B$ can be constructed in $\Oh(n^2)$ time.
+  \end{fact}
+
+  \bigskip
+  \pause
+
+  \begin{fact}[{[Tis08,Rus10,GG\textbf{K}24]}]
+    If $A,B\in \mathbb{R}^{n\times n}$ are Monge matrices and $A$, $B$, and $A\otimes B$ all have cores of size at most $c$, then $A\otimes B$ can be constructed in $\Ohtilde(n+c)$ time.
+  \end{fact}
+  \bigskip
+  \pause
+  \begin{alertblock}{Theorem ([C\textbf{K}M20])}
+    The core of the distance matrix $D_{X,Y}$ can be maintained in $\Ohtilde(n)$ time per update (character edit) in $X,Y\in \Sigma^{\le n}$. 
+   \end{alertblock}
+
+\end{frame}
+
+
+\begin{frame}{Substitutions Only}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item<1-> The optimal path stays within a band of width $\Oh(k)$.
+                \item<2-> Cover the band with $\Oh(\frac{n}{k})$ boxes of size $\Oh(k)\times \Oh(k)$.
+                \item<3-> Optimal path crosses each $V_i$.
+                \item<4-> $D_{i, j}$: the matrix of distances $V_i\leadsto V_j$.
+                \item<5-> $\tOh(k^2 \cdot \frac{n}{k}) = \tOh(nk)$ time for initializing distance matrices of all boxes.
+                \item<5-> $\tOh(k)$ time per update for recomputing the distance matrices of affected boxes.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+            \begin{tikzpicture}[transform canvas={scale=0.55}, y=-1cm, xshift=-5.3cm, yshift=6cm]
+                \bigpicture{\input{boxes-stripe-D.tex}}
+            \end{tikzpicture}
+            \end{center}
+        \end{column}
+    \end{columns}
+  \end{frame}
+
+%\ end{comment}
+  
+  \begin{frame}[fragile]{Substitutions Only}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \[D_{0,m} = \bigotimes_{i=0}^{m-1} D_{i,i+1}\]
+            \begin{itemize}
+                \item<2-> $D_{i,j}$'s can be $(\min, +)$-multiplied in $\tOh(k)$ time.
+                \item<3-> $\tOh(\frac{n}{k} \cdot k)=\tOh(n)$ time for initializing the tree of $D_{i,j}$ matrices.
+                \item<4-> $\tOh(k)$ time per update for maintaining the tree of $D_{i,j}$ matrices.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{tikzpicture}[every node/.style = {minimum width = 2em, draw}, level/.style = {sibling distance = 35mm/#1}, edge from parent/.style={draw}]
+                \bigpicture{\input{Dij_tree.tex}}
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+  \end{frame}
+
+
+  
+  \begin{frame}{Supporting Insertions and Deletions: Challenges}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item<1-> Every substitution affects $\Oh(1)$ boxes, but a single insertion may shift \emph{all} boxes.
+                \item<7-> After $\Omega(k)$ updates the boxes can be completely disjoint with the stripe.
+                %\item<8-> Boxes of size $\Theta(k)\times \Theta(t)$ needed to support $t\ge k$ updates.
+                %\item<9-> $\tOh(\frac{n}{k}\cdot kt)=\tOh(nt)$-time initialization amortizes to $\tOh(n)$ per update~--- no improvement over \where{C\textbf{K}M20}.
+                \item<8-> $\tOh(nk)$-time initialization amortizes to $\tOh(n)$ per update~--- no improvement over \where{C\textbf{K}M20}.
+                \item<12-> Even if update locations are known in advance, $\tOh(k^2)$-time initialization per update is needed~--- no improvement over \where{LV88+MSU94}.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+            \begin{tikzpicture}[transform canvas={scale=0.55}, y=-1cm, xshift=-5.3cm, yshift=6cm]
+                \bigpicture{
+                \input{shifting-boxes-and-affected-boxes.tex}
+                }
+            \end{tikzpicture}
+            \end{center}
+            %*Picture of shifting boxes, and specifying which boxes will change and how it affects the way the algorithm could work*
+        \end{column}
+    \end{columns}
+  \end{frame}
+
+
+    \begin{frame}{Few Distinct Boxes}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Goal:} Achieve $\Ohtilde(k^2)$-time preprocessing.
+            \medskip
+
+            \textbf{Assumptions:} 
+            \begin{itemize}
+               \item $\ed(X,Y)=\Oh(k)$,
+               \item $\sed(X)=\Oh(k)$.
+            \end{itemize}
+
+            \medskip\pause
+            \textbf{Idea:} 
+            \begin{itemize}
+                \item<2-> Use the decomposition $X=\bigodot_{i=1}^{m}X_i$ from $\sed(X)$.
+                \item<9-> Only $\Oh(k)$ boxes are not isomorphic to the previous one.
+                \item<10-> Still $\tOh(k^3)$ preprocessing time~--- amortizes to $\tOh(k^2)$ per update.
+                \item<11-> Even if $X_i \neq X_{i-1}$, we can hope to reuse some information.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \begin{tikzpicture}[scale=0.37, y=-1cm]
+                \bigpicture{
+                    \input{equal-boxes.tex}
+                }
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+  \end{frame}
+
+  \begin{frame}{Relationship between Distinct Boxes}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}%
+            \onslide<2->{%
+            \textbf{Recall:} If $\sed(X)\le k$, then $X$ can be decomposed into $\le k$ single characters and $\le k$ fragments with a \emph{previous occurrence} $\le k$ positions earlier.
+            }
+
+            \bigskip
+            \onslide<17->{
+            \textbf{Consequence:}
+            \begin{itemize}
+                    \item<17-> $X_i, Y_i$ can be constructed from $X_{i - 1}, Y_{i - 1}$ with character appends, copy-pastes, and a prefix removal.
+                    %\item<16-> $Y_i$ can be constructed from $Y_{i - 1}$ with character appends, copy-pastes, and a prefix removal.
+                    \item<18-> Use weight-balanced SLPs \where{CLLPPSS02}.
+                    \item<19-> Time complexity:
+                        \begin{itemize}
+                            \item<19-> $\tOh(k)$ time per operation, $\Oh(k)$ operations across all distinct boxes.
+                            \item<19-> Initialization time: $\tOh(k^2)$.
+                            \item<19-> Amortized over $\Theta(k)$ updates: $\tOh(k)$.
+                       \end{itemize}
+                \end{itemize}
+            }
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \vspace*{-0.4cm}
+            \begin{center}
+            \begin{tikzpicture}[scale=0.53, y=-1cm]
+                \bigpicture{
+                    \bigpicture{\input{distinct_boxes.tex}}
+                }
+            \end{tikzpicture}
+        \end{center}
+            %*Picture of self-alignment again showing equal phrases*
+        \end{column}
+    \end{columns}
+  \end{frame}
+  
+  %\ begin{comment}
+
+  \begin{frame}<2->{Supporting Copy-Pastes}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                \item<1-> As in the algorithm of \where{C\textbf{K}M20} with $\tOh(n)$-time updates, we need some hierarchical string decomposition.
+                \item<3-> Now, we need one that behaves nicely with copy-pastes.
+                \item<4-> Use functional trees to not copy explicitly.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{tikzpicture}[scale=0.35, y=-1cm]
+                    \bigpicture{\input{table-tree-copy.tex}}
+            \end{tikzpicture}
+            %*Picture of static trees, then copy, then reusing the same node, and then reusing more to make a DAG*
+        \end{column}
+    \end{columns}
+  \end{frame}
+
+
+  
+  \begin{frame}{Straight-Line Programs}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \textbf{Straight-Line Programs:}
+                \begin{itemize}
+                    \item<1-> Context-free grammars;
+                    \item<1-> Each non-terminal $A$ has a single production $A \to BC$;
+                    \item<1-> No cyclic dependencies.
+                \end{itemize}
+
+            \bigskip 
+            \onslide<2->{
+            \textbf{Weight-balanced SLPs:}\hfill\where{CLLPPSS02}
+            \begin{itemize}
+                \item If $A\to BC$, then $1 / 3 \le \len(B) / \len(C) \le 3$;
+                \item Support split and join operations like binary search trees.
+                \begin{itemize}
+                    \item<3-> Interpreted as concatenation and substring extraction.
+                    \item<4-> Each operation adds $\Oh(\log n)$ auxiliary non-terminals.
+                \end{itemize}
+            \end{itemize}}
+
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{tikzpicture}[scale=0.55, y=-1cm]
+                    \bigpicture{\input{slp-example.tex}}
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+  \end{frame}
+
+
+
+  \begin{frame}<2->{Using Weight-Balanced SLPs to Initialize Boxes}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{itemize}
+                %\item<1> Weight-balanced SLPs do not have such rigid level structure as weight-balanced B-trees used in \where{C\textbf{K}M20}.
+                \item<2-> To compute the distance matrix, use the production of the longer symbol and recurse on the two ``halves'' of the box.
+                \begin{itemize}
+                    \item<9-> $1 / 4 \le \len(A) / \len(B) \le 4$ for all recursive calls $(A ,B)$.
+                \end{itemize}
+                \item<10-> It is sufficient to maintain distance matrices for all pairs of symbols $(A, B)$ with $1 / 4 \le \len(A) / \len(B) \le 4$.
+                \item<11-> Time complexity:
+                \begin{itemize}
+                    \item<11-> $\tOh(k)$ time per new symbol.
+                    \item<11-> $\tOh(k)$ new symbols in total.
+                    \item<11-> Initialization time: $\tOh(k^2)$.
+                    \item<11-> Amortized over $\Theta(k)$ updates: $\tOh(k)$.
+               \end{itemize}
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{tikzpicture}[scale=0.43, y=-1cm]
+                    \bigpicture{\input{split-slp-boxes.tex}}
+            \end{tikzpicture}
+            %*Picture of a part of the box for a recursive call and how we recurse further*
+        \end{column}
+    \end{columns}
+  \end{frame}
+
+  
+
+  \begin{frame}{Using Weight-Balanced SLPs to Initialize Boxes}
+   \begin{columns}
+       \begin{column}{0.5\textwidth}
+           \begin{itemize}
+               \item<1-> For a fixed $A$, there are $\Oh(k / \len(A))$ symbols $B$ with $1 / 4 \le \len(A) / \len(B) \le 4$.
+               \item<7-> If $B\to B_LB_R$, then computing the distance matrix for $(A,B)$ from the distance matrices of $(A,B_L)$ and $(A,B_R)$ takes $\tOh(\len(A))$ time.
+               \item<8-> Each update (copy-paste, edit, substring extraction) takes $\tOh(k)$ time:
+               \begin{itemize}
+                   \item $\tOh(1)$ new symbols per update.
+                   \item $\tOh(k / \len(A) \cdot \len(A)) = \tOh(k)$ time per new symbol $A$.
+               \end{itemize} 
+               \item<9-> Initializing boxes takes $\tOh(k)$ updates.
+               \begin{itemize}
+                   \item<10-> Initialization time: $\tOh(k^2)$.
+                   \item<10-> Amortized update time: $\tOh(k)$.
+              \end{itemize}
+
+           \end{itemize}
+       \end{column}
+       \begin{column}{0.5\textwidth}
+           \begin{tikzpicture}[scale=0.5, y=-1cm]
+                   \input{show-matching-fragments.tex}
+           \end{tikzpicture}
+           %*Picture of SLPs of two fragments of a box, and to which things one symbol is mapped*
+       \end{column}
+   \end{columns}
+ \end{frame}
+
+%\ end{comment}
+
+  %\ begin{comment}
+
+  % \begin{frame}{From Small Self-Edit Distance to the General Case}
+  %   \begin{columns}
+  %       \begin{column}{0.5\textwidth}
+  %           \begin{itemize}
+  %               \item<1-> \where{C\textbf{K}W23,GJKT24} use divide and conquer:
+  %               \begin{enumerate}
+  %                   \item Find out where the optimal alignment crosses the midpoint of $X$.
+  %                   \item<9-> Recursively compute the two halves of the optimal alignment.
+  %               \end{enumerate}
+  %               \item<11-> If we make an update in $X_L$, it may affect the decomposition $Y = Y_L Y_R$, and thus affect the $(X_R, Y_R)$ recursive call.
+  %           \end{itemize}
+  %       \end{column}
+  %       \begin{column}{0.5\textwidth}
+  %           \hfill
+  %           \begin{tikzpicture}[scale=0.5, y=-1cm]
+  %                   \bigpicture{
+  %                       \input{CKW_algorithm_divide_and_conquer.tex}
+  %                   }
+  %           \end{tikzpicture}
+  %           \hfill
+  %           %*Picture how small $\sed$ region in the middle gives the middle point and how the opt alignment intersects the small $\sed$ alignment; and how a change in $X_L$ may affect $Y_R$*
+  %       \end{column}
+  %   \end{columns}
+  % \end{frame}
+
+ % \ end{comment}
+
+ \begin{frame}{Self-Edit Distance vs Alignment Intersections}
+  \begin{columns}
+      \begin{column}{0.5\textwidth}
+          \begin{block}{Observation\hfill [C\textbf{K}W23]}
+              Two alignments $X \onto Y$ of cost at most $k$ \textbf{must intersect} within \emph{every} fragment of $X$ of self-edit distance $> 2k$.
+          \end{block}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+          \begin{tikzpicture}[scale=0.55, y=-1cm]
+              \bigpicture{\input{intersect-sufficient-sed.tex}}
+          \end{tikzpicture}
+      \end{column}
+  \end{columns}
+\end{frame}
+
+  \begin{frame}[label=current]{Summary}
+  \begin{alertblock}{Theorem}
+    There is a dynamic algorithm that maintains $\ed(X,Y)$ subject to edits in $X$ and $Y$, taking $\Oh(k\log^4 n)$ time per update, where $n=|X|+|Y|$ and $k=\ed(X,Y)$.
+  \end{alertblock}
+
+  \medskip
+  \pause
+  \textbf{Open problem:}
+  \begin{itemize}
+    \item Reduce the $\log^4 n$ factor to $\log^2 n$ and beyond.
+  \end{itemize}
+
+  \pause
+  \medskip
+  \textbf{Weighted edit distance:}
+    \begin{itemize}
+      \item<3-> Static algorithms:
+      \begin{itemize}
+        \item<3-> $\Ohtilde(n+\sqrt{nk^3})$ for arbitrary normalized weights (tight if $\sqrt{n}\le k \le n$);\hfill \where{C\textbf{K}W23}
+        \item<4-> $\Ohtilde(n+k^{2.5})$ for integer weights;\hfill \where{this work}
+        \item<5-> $\Ohtilde(n+Wk^2)$ for weights in $[0\dd W]$.\hfill \where{this work}
+      \end{itemize}
+      \item<6-> Dynamic algorithms:
+      \begin{itemize}
+        \item<6-> $\Ohtilde(k^3)$ for arbitrary normalized weights;
+        \item<6-> $\Ohtilde(k^{2.5})$ for integer weights;
+        \item<6-> \alt<-6>{$\Ohtilde(Wk^2)$}{{\boldmath$\Ohtilde(W^2k)$}} for weights in $[0\dd W]$.\only<7->{\hfill \where{this work}}
+      \end{itemize}
+    \end{itemize}
+
+    \begin{tikzpicture}[overlay,remember picture]
+      \node<8->[text=MPIgreen] at ([xshift=3.75cm,yshift=.8cm]current page.center){\Huge Thank you!};
+      \end{tikzpicture}%
+\end{frame}
+\end{comment}

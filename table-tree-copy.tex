@@ -1,0 +1,92 @@
+
+\def\shft{0}
+\def\W{12}
+\def\H{12}
+\def\myi{2}
+\def\cnt{6}
+\def\sizeofdot{3pt}
+\def\gp{0.1}
+
+%\draw[black,thin] (-1,-1) grid (\H + 1,\W + 1);
+
+\fill[darkgreen,opacity=0.4] (0, 0) rectangle (\H / 4, \W);
+\fill[violet,opacity=0.4] (\H / 4, 0) rectangle (\H / 2, \W);
+\fill[orange,opacity=0.4] (\H / 2, 0) rectangle (3 * \H / 4, \W);
+
+\fill<3>[violet, opacity=0.1] (3 * \H / 4, 0) rectangle (\H, \W);
+\fill<4->[violet, opacity=0.4] (3 * \H / 4, 0) rectangle (\H, \W);
+
+\fill<5->[yellow,opacity=0.4] (0, 0) rectangle (\H, \W / 4);
+\fill<5->[cyan,opacity=0.4] (0,\W / 4) rectangle (\H, \W / 2);
+\fill<5->[yellow,opacity=0.4] (0, \W / 2) rectangle (\H, 3 * \W / 4);
+\fill<5->[cyan,opacity=0.4] (0, 3*\W / 4) rectangle (\H, \W);
+
+
+\draw<3>[dashed, black] (3 * \H / 4, 0) -- (\H, 0) -- (\H, \W) -- (3 * \H / 4, \W);
+
+\draw<-3>[thick] (0, 0) rectangle (3 * \H / 4, \W);
+\draw<4->[thick] (0, 0) rectangle (\H, \W);
+
+\draw[thick, dashed, gray] (\H / 2, 0) -- (\H / 2, \W);
+\draw<-2>[thick, dashed, gray] (0, \W / 2) -- (3 * \H / 4, \W / 2);
+\draw<3->[thick, dashed, gray] (0, \W / 2) -- (\H, \W / 2);
+\draw[dashed, gray] (\H / 4, 0) -- (\H / 4, \W);
+\draw<4->[dashed, gray] (3 * \H / 4, 0) -- (3 * \H / 4, \W);
+\draw<-2>[dashed, gray] (0, \W / 4) -- (3 * \H / 4, \W / 4);
+\draw<3->[dashed, gray] (0, \W / 4) -- (\H, \W / 4);
+\draw<-2>[dashed, gray] (0, 3 * \W / 4) -- (3 * \H / 4, 3 * \W / 4);
+\draw<3->[dashed, gray] (0, 3 * \W / 4) -- (\H, 3 * \W / 4);
+
+
+\node[circle,draw=black, fill=black, inner sep=0pt,minimum size=\sizeofdot] (x0) at (\H / 2, -8) {};
+\node[circle,draw=black, fill=black, inner sep=0pt,minimum size=\sizeofdot] (x00) at (\H / 4, -5) {};
+\draw[-latex] (x0) -- (x00);
+\node[circle,draw=black, fill=black, inner sep=0pt,minimum size=\sizeofdot] (x01) at (3 * \H / 4, -5) {};
+\draw[-latex] (x0) -- (x01);
+
+\node[circle,draw=darkgreen, fill=darkgreen, inner sep=0pt,minimum size=\sizeofdot] (x000) at (\H / 8, -3) {};
+\draw[-latex] (x00) -- (x000);
+\draw[darkgreen, fill=darkgreen] (x000) -- (\H / 4 - \gp, -\gp) -- (\gp, -\gp) -- (x000);
+\node[circle,draw=violet, fill=violet, inner sep=0pt,minimum size=\sizeofdot] (x001) at (3 * \H / 8, -3) {};
+\draw[-latex] (x00) -- (x001);
+\draw[violet, fill=violet] (x001) -- (\H / 2 - \gp, -\gp) -- (\H / 4 + \gp, -\gp) -- (x001);
+\node[circle,draw=orange, fill=orange, inner sep=0pt,minimum size=\sizeofdot] (x010) at (5 * \H / 8, -3) {};
+\draw[-latex] (x01) -- (x010);
+\draw[orange, fill=orange] (x010) -- (3 * \H / 4 - \gp, -\gp) -- (\H / 2 + \gp, -\gp) -- (x010);
+\node<3>[circle,draw=violet!20, fill=violet!20, inner sep=0pt,minimum size=\sizeofdot] (x011) at (7 * \H / 8, -3) {};
+\draw<3>[-latex, dashed, black!40] (x01) -- (x011);
+\draw<3>[violet!20, fill=violet!20] (x011) -- (\H - \gp, -\gp) -- (3 * \H / 4 + \gp, -\gp) -- (x011);
+\draw<3>[-latex, thick] (3 * \H / 8, -\gp) to [out=60, in=120] (7 * \H / 8, -\gp);
+\draw<4->[-latex] (x01) to [out=306.8698976, in=53.1301024] (x001); % out=270+atan(1.5 / 2), in=atan(2 / 1.5)
+
+
+
+\node[circle,draw=black, fill=black, inner sep=0pt,minimum size=\sizeofdot] (y0) at (-8, \W / 2) {};
+\node[circle,draw=black, fill=black, inner sep=0pt,minimum size=\sizeofdot] (y00) at (-5, \W / 4) {};
+\onslide<-5>{\draw[-latex] (y0) -- (y00);}
+\onslide<6>{\draw[-latex] (y0) to [out=60, in=120] (y00);}
+\onslide<6>{\draw[-latex] (y0) to [out=-60, in=240] (y00);}
+
+\onslide<-5>{
+\node[circle,draw=black, fill=black, inner sep=0pt,minimum size=\sizeofdot] (y01) at (-5, 3 * \W / 4) {};
+\draw[-latex] (y0) -- (y01);
+}
+
+\node[circle,draw=black, fill=black, inner sep=0pt,minimum size=\sizeofdot] (y000) at (-3, \W / 8) {};
+\draw[-latex] (y00) -- (y000);
+\fill<-4>[black] (y000) -- (-\gp, \W / 4 - \gp) -- (-\gp, \gp) -- (y000);
+\fill<5->[yellow] (y000) -- (-\gp, \W / 4 - \gp) -- (-\gp, \gp) -- (y000);
+\node[circle,draw=black, fill=black, inner sep=0pt,minimum size=\sizeofdot] (y001) at (-3, 3 * \W / 8) {};
+\draw[-latex] (y00) -- (y001);
+\fill<-4>[black] (y001) -- (-\gp, \W / 2 - \gp) -- (-\gp, \W / 4 + \gp) -- (y001);
+\fill<5->[cyan] (y001) -- (-\gp, \W / 2 - \gp) -- (-\gp, \W / 4 + \gp) -- (y001);
+\onslide<-5>{
+\node[circle,draw=black, fill=black, inner sep=0pt,minimum size=\sizeofdot] (y010) at (-3, 5 * \W / 8) {};
+\draw[-latex] (y01) -- (y010);
+\fill<-4>[black] (y010) -- (-\gp, 3 * \W / 4 - \gp) -- (-\gp, \W / 2 + \gp) -- (y010);
+\fill<5->[yellow] (y010) -- (-\gp, 3 * \W / 4 - \gp) -- (-\gp, \W / 2 + \gp) -- (y010);
+\node[circle,draw=black, fill=black, inner sep=0pt,minimum size=\sizeofdot] (y011) at (-3, 7 * \W / 8) {};
+\draw[-latex] (y01) -- (y011);
+\fill<-4>[black] (y011) -- (-\gp, \W - \gp) -- (-\gp, 3 * \W / 4 + \gp) -- (y011);
+\fill<5->[cyan] (y011) -- (-\gp, \W - \gp) -- (-\gp, 3 * \W / 4 + \gp) -- (y011);
+}

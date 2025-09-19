@@ -1,0 +1,35 @@
+
+\def\shft{0}
+\def\W{12}
+\def\H{12}
+\def\myi{2}
+\def\cnt{6}
+\def\gp{2}
+%\draw[black,thin] (-1,-1) grid (\H + 1,\W + 1);
+
+
+
+
+\draw<4-5>[line width=3pt, blue!30!,line cap=round] (0, 0) -- (1, 0) -- (2, 1) -- (2,2) -- (4, 2) -- (5, 3) -- (6,4)-- (6, 5) -- (9, 8) -- (9, 10) -- (11, 12) -- (12, 12);
+\draw<6->[line width=3pt, blue!30!,line cap=round] (0, 0) -- (1, 0) -- (2, 1) -- (2,2) -- (2, 4) -- (3, 5) -- (6, 5) -- (9, 8) -- (9, 10) -- (11, 12) -- (12, 12);
+\draw[line width=3pt, red!30,line cap=round] (0, 0) -- (0, 1) -- (1, 2) -- (2, 2) -- (8, 8) -- (9, 8) -- (12, 11) -- (12, 12);
+
+\draw[dashed] (\H / 3, 0) -- (\H / 3, \W);
+\draw[dashed] (2 * \H / 3, 0) -- (2 * \H / 3, \W);
+
+\draw<5-6>[densely dotted] (2, 0) -- (2,2);
+\draw<5-6>[densely dotted] (9, 0) -- (9,8);
+
+
+\draw[latex-latex] (\H / 3, -0.3) --node[above]{$\sed > 2k$} (2 * \H / 3, -0.3);
+\draw<5-6>[latex-latex] (2, -0.15) -- (9, -0.15);
+
+\draw [line width=1.3pt, violet] (0,0) circle [radius=.25];
+\draw [line width=1.3pt, violet] (2, 2) circle [radius=.25];
+\draw<6> [line width=1.3pt, violet] (5, 5) circle [radius=.25];
+\draw<7> [line width=1.3pt, violet, fill=violet] (5, 5) circle [radius=.25];
+\draw [line width=1.3pt, violet] (9, 8) circle [radius=.25];
+\draw [line width=1.3pt, violet] (\H,\W) circle [radius=.25];
+
+
+\draw[thick] (0, 0) rectangle (\H, \W);

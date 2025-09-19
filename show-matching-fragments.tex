@@ -1,0 +1,25 @@
+
+
+\def\W{12}
+\def\H{12}
+\def\cnt{6}
+\def\sizeofdot{2pt}
+\def\gp{0.0}
+\def\lx{3}
+\def\rx{7}
+%\draw[black,thin] (-1,-1) grid (\H + 1,\W + 1);
+
+
+
+\foreach \iter/\ly/\ry/\cursym in {2/0/5/B,3/2/5/C,4/5/12/D,5/5/8/E,6/8/12/F}
+    \draw[white] (-\gp, \ly) to [out=210,in=150] node[midway,left=-2] {$\cursym$} (-\gp, \ry);
+
+\foreach \iter/\ly/\ry/\cursym in {2/0/5/B,3/2/5/C,4/5/12/D,5/5/8/E,6/8/12/F}{
+    \draw<\iter> (-\gp, \ly) to [out=210,in=150] node[midway,left=-2] {$\cursym$} (-\gp, \ry);
+    \draw<\iter->[semitransparent] (-\gp, \ly) to [out=210,in=150] (-\gp, \ry);
+    \draw<\iter>[thick,fill=red!40] (\lx, \ly) rectangle (\rx, \ry);
+    \draw<\iter->[dashed,semitransparent] (\lx, \ly) rectangle (\rx, \ry);
+};
+
+\draw[thick] (0, 0) rectangle (\H, \W);
+\draw (\lx, -\gp) to [out=60,in=120] node[midway,above] {$A$} (\rx, -\gp);

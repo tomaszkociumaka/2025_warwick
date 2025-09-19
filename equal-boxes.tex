@@ -1,0 +1,57 @@
+
+\def\W{16}
+\def\H{16}
+\def\cnt{7}
+\def\gp{2}
+
+\draw<4->[fill=yellow!40] (8, 9.4) rectangle (12, 9.9);
+
+\foreach \iter in {0,1,...,9}
+    \foreach \x in {0,1,...,\cnt}
+        \ifthenelse{\x > 0 \AND \x < 4 \AND \iter > 3}{
+            \draw<{\the \numexpr\iter+2}>[fill=cyan] (\x * \gp, \x * \gp - 2*\gp / 3) rectangle (\x * \gp + \gp, \x * \gp + \gp + 2*\gp / 3);
+        }{
+            \ifthenelse{\x > 5 \AND \iter > 5}{
+                \draw<{\the \numexpr\iter+2}>[fill=violet] (\x * \gp, \x * \gp - 2*\gp / 3) rectangle (\x * \gp + \gp, \x * \gp + \gp + 2*\gp / 3);
+            }{
+                \draw<{\the \numexpr\iter+2}> (\x * \gp, \x * \gp - 2*\gp / 3) rectangle (\x * \gp + \gp, \x * \gp + \gp + 2*\gp / 3);
+            };
+        };
+
+
+
+\draw<3->[line width=2pt, red!30,line cap=round] (0.1, 0.1) -- (9.4, 9.4) -- (9.4, 9.9) -- (\H - 0.1, \W + 0.4);
+
+\foreach \x in {0,1,...,\cnt}{
+    \draw[line width=2pt] (\x * \gp+0.03,-2.2) -- (\x * \gp + \gp-0.03,-2.2);
+    \draw[dashed, lightgray] (\x * \gp+\gp, -2*\gp / 3) -- (\x * \gp+\gp, \x * \gp - 2*\gp / 3 - 0.1);
+    \draw[dashed, lightgray] (\x * \gp+\gp, -2.2) -- (\x * \gp+\gp, -1.9);
+}
+\draw[dashed, lightgray] (0, -2*\gp / 3) -- (0, - 2*\gp / 3 - 0.1);
+\draw[dashed, lightgray] (0, -2.2) -- (0, -1.9);
+
+\onslide<5->{
+\foreach \x in {1,2,3}{
+    \draw[cyan,line width=2pt] (-1-0.4*\x,\x * \gp - 2*\gp / 3) -- (-1-0.4*\x,\x * \gp + \gp + 2*\gp / 3);
+    \draw[dashed, lightgray] (0, \x * \gp - 2*\gp / 3) -- (\x * \gp - 0.1, \x * \gp - 2*\gp / 3);
+    \draw[dashed, lightgray] (-1-0.4*\x, \x * \gp - 2*\gp / 3) -- (-0.75, \x * \gp - 2*\gp / 3);
+    \draw[dashed, lightgray] (0, \x * \gp + \gp + 2*\gp / 3) -- (\x * \gp - 0.1, \x * \gp + \gp + 2*\gp / 3);
+    \draw[dashed, lightgray] (-1-0.4*\x, \x * \gp + \gp + 2*\gp / 3) -- (-0.75, \x * \gp + \gp + 2*\gp / 3);
+}
+}
+
+\onslide<7->{
+
+\foreach \x in {6,7}{
+    \draw[violet,line width=2pt] (-0.4*\x+1,\x * \gp - 2*\gp / 3) -- (-0.4*\x+1,\x * \gp + \gp + 2*\gp / 3);
+    \draw[dashed, lightgray] (0, \x * \gp - 2*\gp / 3) -- (\x * \gp - 0.1, \x * \gp - 2*\gp / 3);
+    \draw[dashed, lightgray] (1-0.4*\x, \x * \gp - 2*\gp / 3) -- (-0.75, \x * \gp - 2*\gp / 3);
+    \draw[dashed, lightgray] (0, \x * \gp + \gp + 2*\gp / 3) -- (\x * \gp - 0.1, \x * \gp + \gp + 2*\gp / 3);
+    \draw[dashed, lightgray] (1-0.4*\x, \x * \gp + \gp + 2*\gp / 3) -- (-0.75, \x * \gp + \gp + 2*\gp / 3);
+}
+}
+
+\onslide<11>{
+    \foreach \x in {3,4,5}
+\draw<{\the\numexpr \x-1}->[-latex] (\x * \gp + \gp / 2 + 0.1, \x * \gp - 2*\gp / 3 - 0.1) to [out=90,in=180] (\x * \gp + \gp, \x * \gp - \gp) node[above] {\hphantom{sp}\tiny $2$ edits} to [out=0,in=90] (\x * \gp + \gp + \gp / 2 - 0.1, \x * \gp + 1*\gp / 3 - 0.1) ;
+}

@@ -1,0 +1,134 @@
+
+\def\shft{0}
+\def\W{12}
+\def\H{12}
+\def\myi{2}
+\def\cnt{6}
+\def\gp{2}
+\def\kp{1.5}
+\def\charwidth{1 / 15}
+%\draw[black,thin] (-1,-1) grid (\H + 1,\W + 1);
+
+%0/gray,1/red,2/violet,3/blue,4/magenta,5/orange,6/green,7/yellow
+
+\foreach \x/\c/\d/\e in {0/gray/darkblue/gray,\gp/violet/darkblue/darkblue,2*\gp/orange/purple/purple,3*\gp/magenta/purple/purple,4*\gp/yellow/purple/purple,5*\gp/yellow/purple/yellow} {
+    \draw<2-4>[fill=\c!40,thick] (\x, {max(\x - \kp, 0)}) rectangle (\x + \gp, {min(\x + \gp + \kp, \H)});
+    \draw<5->[fill=\e!40, thick] (\x, {max(\x - \kp, 0)}) rectangle (\x + \gp, {min(\x + \gp + \kp, \H)});
+    \draw<8->[densely dotted,step=0.5cm] (\x, {max(\x - \kp, 0)}) grid (\x + \gp, {min(\x + \gp + \kp, \H)});
+}
+
+\onslide<9>{
+  \foreach \y in {0,.5,...,3} {
+      \foreach \x in {0,0.5,...,1.5} {
+        \pgfmathrandominteger{\r}{0}{3}
+      % map 0..3 to the four colors
+        \ifcase\r\relax
+        \def\cellcolor{gray}%
+        \or
+        \def\cellcolor{darkblue}%
+        \or
+        \def\cellcolor{purple}%
+        \or
+        \def\cellcolor{yellow}%
+        \fi
+          \path[fill=\cellcolor!40] (\x,\y) rectangle ++(.5,.5); 
+      }
+  }
+    \foreach \y in {0,0.5,...,4.5} {
+      \foreach \x in {0,0.5,...,1.5} {
+        \pgfmathrandominteger{\r}{0}{3}
+      % map 0..3 to the four colors
+        \ifcase\r\relax
+        \def\cellcolor{gray}%
+        \or
+        \def\cellcolor{darkblue}%
+        \or
+        \def\cellcolor{purple}%
+        \or
+        \def\cellcolor{yellow}%
+        \fi
+          \path[fill=\cellcolor!40] (2+\x,.5+\y) rectangle ++(.5,.5); 
+      }
+  }
+      \foreach \y in {0,0.5,...,4.5} {
+      \foreach \x in {0,0.5,...,1.5} {
+        \pgfmathrandominteger{\r}{0}{3}
+      % map 0..3 to the four colors
+        \ifcase\r\relax
+        \def\cellcolor{gray}%
+        \or
+        \def\cellcolor{darkblue}%
+        \or
+        \def\cellcolor{purple}%
+        \or
+        \def\cellcolor{yellow}%
+        \fi
+          \path[fill=\cellcolor!40] (4+\x,2.5+\y) rectangle ++(.5,.5); 
+          \path[fill=\cellcolor!40] (6+\x,4.5+\y) rectangle ++(.5,.5); 
+          \path[fill=\cellcolor!40] (8+\x,6.5+\y) rectangle ++(.5,.5); 
+
+      }
+  }
+
+    \foreach \y in {8.5,9,...,11.5} {
+      \foreach \x in {10,10.5,...,11.5} {
+        \pgfmathrandominteger{\r}{0}{3}
+      % map 0..3 to the four colors
+        \ifcase\r\relax
+        \def\cellcolor{gray}%
+        \or
+        \def\cellcolor{darkblue}%
+        \or
+        \def\cellcolor{purple}%
+        \or
+        \def\cellcolor{yellow}%
+        \fi
+          \path[fill=\cellcolor!40] (\x,\y) rectangle ++(.5,.5); 
+      }
+  }
+}
+
+%\foreach \x/\c in {} {
+%    \draw<2-4>[fill=\c!40, thick] (\x, {max(\x - \kp, 0)}) rectangle (\x + \gp, {min(\x + \gp + \kp, \H)});
+%    \draw<5->[fill=darkblue!40, thick] (\x, {max(\x - \kp, 0)}) rectangle (\x + \gp, {min(\x + \gp + \kp, \H)});
+%}
+
+%\foreach \x in {4*\gp} {
+%    \draw<2-5>[fill=darkblue!40, thick] (\x, {max(\x - \kp, 0)}) rectangle (\x + \gp, {min(\x + \gp + \kp, \H)});
+%    \draw<6->[fill=darkblue!70, thick] (\x, {max(\x - \kp, 0)}) rectangle (\x + \gp, {min(\x + \gp + \kp, \H)});
+%}
+
+\draw (\kp,0.1) -- (\kp,-0.1) node[above] {$k$};
+\draw (0.1,\kp) -- (-0.1,\kp) node[left] {$k$};
+\draw[fill=darkgreen,fill opacity=0.1] (0, 0) -- (\kp, 0) -- (\H, \W - \kp) -- (\H, \W) -- (\H - \kp, \W) -- (0, \kp) -- (0, 0);
+
+\onslide<2->{
+\foreach \x in {0,\gp,...,{\the\numexpr \W - \gp}}
+    \draw (\x, {max(\x - \kp, 0)}) rectangle (\x + \gp, {min(\x + \kp + \gp, \H)});
+}
+
+\draw[thick] (0, 0) rectangle (\H, \W);
+
+\onslide<2->{
+\draw (0,0.1) -- (0,0) node[above] {$x_0$};
+\draw (\W,0.1) -- (\W,0) node[above] {$x_{\cnt}$};
+\foreach \x in {1,2,...,{\the\numexpr \cnt - 1}}
+    \draw (\x * \gp,0.1) -- (\x * \gp, -0.1) node[above] {$x_{\x}$};
+
+
+\draw[dashed] (\myi * \gp + \gp, 0) -- (\myi * \gp + \gp, \myi * \gp);
+\draw[dashed] (0,\myi * \gp - \kp) node[left] {$x_{\myi} - k$} -- (\myi * \gp,\myi * \gp - \kp);
+\draw[dashed] (0,\myi * \gp + \gp + \kp) node[left] {$x_{\the\numexpr \myi + 1} + k$} -- (\myi * \gp,\myi * \gp + \kp+ \gp);
+}
+
+\node<3->[left, black] at (\myi * \gp, \myi * \gp) {$V_{\myi}$};
+\node<3->[right, black] at (\myi * \gp + \gp, \myi * \gp + \gp) {$V_{\the\numexpr \myi + 1}$};
+
+\draw<3->[very thick, darkgreen] (\myi * \gp, \myi * \gp - \kp) -- (\myi * \gp, \myi * \gp + \kp);
+\draw<3->[very thick, darkgreen] (\myi * \gp + \gp, \myi * \gp+\gp-\kp) -- (\myi * \gp + \gp, \myi * \gp + \gp + \kp);
+
+%\node<4->[darkred] at (\myi * \gp + \gp / 2, \myi * \gp + \gp / 2) {\Large $D_{\myi, {\the\numexpr \myi + 1}}$};
+
+
+%\draw<6->[fill=orange, thick,opacity=0.4] (4.2 * \gp - 1.0 * \gp * \charwidth, 0) rectangle (4.2 * \gp + 1.0 * \gp * \charwidth, \H);
+%\draw<7->[fill=orange, thick,opacity=0.4] (0, 2.5 * \gp - 1.0 * \gp * \charwidth) rectangle (\W, 2.5 * \gp + 1.0 * \gp * \charwidth);

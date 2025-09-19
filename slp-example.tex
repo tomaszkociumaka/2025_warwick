@@ -1,0 +1,25 @@
+\node (txt) at (0, -2) {$\exp(A) = \mathtt{abccdcdabccd}$};
+
+\node (A) at (0, 0) {$A$};
+\node (B) at (-3, 3) {$B$};
+\node (C) at (3, 3) {$C$};
+\node (D) at (-6, 6) {$D$};
+\node (E) at (0, 6) {$E$};
+\node (F) at (-4, 8) {$F$};
+\node (a) at (-7, 10) {$\mathtt{a}$};
+\node (b) at (-5, 10) {$\mathtt{b}$};
+\node (c) at (-2, 10) {$\mathtt{c}$};
+\node (e) at (2, 10) {$\mathtt{d}$};
+
+\draw[-latex] (A) -- (B);
+\draw[-latex] (A) -- (C);
+\draw[-latex] (B) -- (D);
+\draw[-latex] (B) -- (E);
+\draw[-latex] (C) -- (E);
+\draw[-latex] (C) to [out=315,in=90] (B);
+\draw[-latex] (D) -- (F);
+\draw[-latex] (D) -- (a);
+\draw[-latex] (F) -- (b);
+\draw[-latex] (F) -- (c);
+\draw[-latex] (E) -- (c);
+\draw[-latex] (E) -- (e);

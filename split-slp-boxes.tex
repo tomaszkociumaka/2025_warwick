@@ -1,0 +1,53 @@
+
+
+\def\W{12}
+\def\H{12}
+\def\cnt{6}
+\def\sizeofdot{2pt}
+\def\gp{0}
+%\draw[black,thin] (-1,-1) grid (\H + 1,\W + 1);
+
+\draw<-3>[red!40, fill=red!40] (0, 0) rectangle (\H, \W);
+\draw<4-5>[red!40, fill=red!40] (0, 0) rectangle (\H / 2, \W);
+\draw<6-7>[red!40, fill=red!40] (0, 2*\W / 3) rectangle (\H / 2, 0);
+\draw<8->[red!40, fill=red!40] (0, 0) rectangle (\H / 2, \W / 4);
+
+\draw<-3>[thick] (0, 0) rectangle (\H, \W);
+\draw<4->[thick, nearly transparent] (0, 0) rectangle (\H, \W);
+
+\draw<-3> (0, -\gp) to [out=80,in=100] node[midway,above] {$A$} (\H, -\gp);
+\draw<4->[nearly transparent] (0, -\gp) to [out=80,in=100] node[midway,above] {$A$} (\H, -\gp);
+
+\draw<3-> (0, -\gp) to [out=60,in=120] node[midway,above] {$C$} (\H / 2, -\gp);
+\draw<3> (\H / 2, -\gp) to [out=60,in=120] node[midway,above] {$D$} (\H, -\gp);
+\draw<4->[nearly transparent] (\H / 2, -\gp) to [out=60,in=120] node[midway,above] {$D$} (\H, -\gp);
+
+\draw<-5> (-\gp, 0) to [out=190,in=170] node[midway,left] {$B$} (-\gp, \W);
+\draw<6->[nearly transparent] (-\gp, 0) to [out=190,in=170] node[midway,left] {$B$} (-\gp, \W);
+
+\draw<5> (-\gp, 2*\W/3) to [out=210,in=150] node[midway,left] {$F$} (-\gp, \W);
+\draw<6->[nearly transparent] (-\gp, 2*\W/3) to [out=210,in=150] node[midway,left] {$F$} (-\gp, \W);
+
+\draw<5-7> (-\gp, 0) to [out=210,in=150] node[midway,left] {$E$} (-\gp, 2*\W / 3);
+\draw<8->[nearly transparent] (-\gp, 0) to [out=210,in=150] node[midway,left] {$E$} (-\gp, 2*\W / 3);
+
+\draw<7-> (-\gp, 0) to [out=240,in=120] (-\gp, \W / 4);
+\node<7-> (G) at (-0.84, \W / 8) {$G$};
+
+\draw<7> (-\gp, \W / 4) to [out=240,in=120] (-\gp, 2*\W/3);
+\node<7> (H) at (-1.2, 11*\W / 24) {$H$};
+\draw<8->[nearly transparent] (-\gp, \W / 4) to [out=240,in=120] (-\gp, 2*\W/3);
+\node<8->[nearly transparent] (H) at (-1.2, 11*\W / 24) {$H$};
+
+\draw<3-5>[dashed] (\H / 2, 0) -- (\H / 2, \W);
+\draw<6->[dashed, nearly transparent] (\H / 2, \W) -- (\H / 2, 2*\W / 3);
+\draw<3-5>[thick] (\H / 2, 0) -- (0, 0) -- (0, \W) -- (\H / 2, \W);
+\draw<6-7>[dashed] (\H / 2, 2*\W / 3) -- (\H / 2, 0);
+\draw<8->[dashed, nearly transparent] (\H / 2, \W / 4) -- (\H / 2, \W);
+\draw<8->[dashed, nearly transparent] (\H / 2, \W / 4) -- (\H / 2, \W);
+\draw<6-7>[thick] (0, 2*\W / 3) -- (0, 0) -- (\H / 2, 0);
+\draw<8->[thick] (\H/2, 0) -- (0, 0) -- (0, \W / 4);
+\draw<8->[dashed] (\H / 2, 0) -- (\H / 2, \W / 4);
+\draw<5-7>[dashed] (0, 2*\W / 3) -- (\H / 2, 2*\W / 3);
+\draw<8->[dashed,nearly transparent] (0, 2*\W / 3) -- (\H / 2, 2*\W / 3);
+\draw<7->[dashed] (0,  \W / 4) -- (\H / 2, \W / 4);

@@ -1,0 +1,70 @@
+
+\usetheme{Berlin}
+\definecolor{MPIgreen}{HTML}{006C66}
+\usecolortheme[named=MPIgreen]{structure}
+\useoutertheme{infolines}
+\useinnertheme{rectangles}
+\usefonttheme{professionalfonts}
+
+\makeatletter
+\newcommand\SoulColor{%
+  \let\set@color\beamerorig@set@color
+  \let\reset@color\beamerorig@reset@color}
+\makeatother
+\definecolor{darkred}{RGB}{220,20,60}
+\setstcolor{darkred}
+\newcommand<>{\St}[1]{\alt#2{\SoulColor\st{#1}}{#1}}
+
+%\let\emph\textbf
+\let\footnoterule\relax
+
+\setbeamertemplate{section page}
+{
+    \begin{centering}
+    \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+    \end{beamercolorbox}
+    \end{centering}
+}    
+%\setbeamercolor{alerted text}{fg=blue}
+\setbeamercolor{section in toc}{fg=black}
+
+\setbeamercolor{passive}{fg=white, use=part title, bg=part title.bg!40}
+
+\setbeamertemplate{headline}{}
+
+\setbeamertemplate{navigation symbols}{} 
+\setbeamertemplate{footline}{%
+\leavevmode%
+\hbox{%
+
+\begin{beamercolorbox}[wd=.30\paperwidth,ht=2.5ex,dp=1.125ex,right]{author
+in head/foot}%
+\usebeamerfont{title in head/foot}\insertshortauthor\hspace{.3cm}
+\end{beamercolorbox}%
+
+\begin{beamercolorbox}[wd=.62\paperwidth,ht=2.5ex,dp=1.125ex,left]{title
+in head/foot}
+\usebeamerfont{author in head/foot}\hspace{.3cm}\insertshorttitle
+\end{beamercolorbox}%
+
+\begin{beamercolorbox}[wd=.08\paperwidth,ht=2.5ex,dp=1.125ex,right]{author
+  in head/foot}%
+  \usebeamerfont{author in
+  head/foot}\insertframenumber/\inserttotalframenumber\hspace{.25cm}
+  \end{beamercolorbox}%
+}%
+\vskip0pt%
+}
+
+% \setbeamertemplate{itemize item}{\tiny$\blacksquare$}
+% \setitemize{label=\usebeamerfont*{itemize item}%
+% \usebeamercolor[fg]{itemize item}
+% \usebeamercolor[fg]{itemize subitem}
+% \usebeamertemplate{itemize item}}
+
+% \setbeamercolor*{description}{fg=MPIgreen}
+
+\definecolor{darkgreen}{RGB}{0,160,0}
+\definecolor{darkred}{RGB}{220,20,60}
+\definecolor{darkblue}{RGB}{0,0,160}

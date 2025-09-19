@@ -1,0 +1,68 @@
+
+\def\shft{0}
+\def\W{12}
+\def\H{12}
+\def\myi{2}
+\def\cnt{6}
+\def\gp{2}
+\def\kp{1.5}
+\def\charwidth{1 / 15}
+%\draw[black,thin] (-1,-1) grid (\H + 1,\W + 1);
+
+%0/gray,1/red,2/violet,3/blue,4/magenta,5/orange,6/green,7/yellow
+
+
+%\foreach \x/\c in {} {
+%    \draw<2-4>[fill=\c!40, thick] (\x, {max(\x - \kp, 0)}) rectangle (\x + \gp, {min(\x + \gp + \kp, \H)});
+%    \draw<5->[fill=darkblue!40, thick] (\x, {max(\x - \kp, 0)}) rectangle (\x + \gp, {min(\x + \gp + \kp, \H)});
+%}
+
+%\foreach \x in {4*\gp} {
+%    \draw<2-5>[fill=darkblue!40, thick] (\x, {max(\x - \kp, 0)}) rectangle (\x + \gp, {min(\x + \gp + \kp, \H)});
+%    \draw<6->[fill=darkblue!70, thick] (\x, {max(\x - \kp, 0)}) rectangle (\x + \gp, {min(\x + \gp + \kp, \H)});
+%}
+
+\draw (\kp,0.1) -- (\kp,-0.1) node[above] {$k$};
+\draw (0.1,\kp) -- (-0.1,\kp) node[left] {$k$};
+\draw<1>[fill=darkgreen!20] (0, 0) -- (\kp, 0) -- (\H, \W - \kp) -- (\H, \W) -- (\H - \kp, \W) -- (0, \kp) -- (0, 0);
+\draw<2->[] (0, 0) -- (\kp, 0) -- (\H, \W - \kp) -- (\H, \W) -- (\H - \kp, \W) -- (0, \kp) -- (0, 0);
+
+
+\draw[thick] (0, 0) rectangle (\H, \W);
+
+\onslide<1-2>{
+    \draw[line width=7pt, darkgreen, cap=round,opacity=0.5] (0,0) -- (0,0.5) -- (3, 3.5) -- (3,4) -- (7,8) -- (8.5,8) -- (10.5,10) -- (10.5,10.5) -- (12,12);
+}  
+\onslide<2->{
+    \draw[line width=4pt, darkblue, cap=round] (3,4) -- (7,8);
+}    
+\onslide<2->{
+\draw[darkblue,ultra thick] (-.2,4) -- (-.2,8) (3, -.2) -- (7, -.2);
+\draw[dotted] (-.2, 4) -- (3,4) -- (3, -.2) (-.2, 8) -- (7,8) -- (7, -.2);
+}
+\onslide<3->{
+    \draw (-.2,4) node[left]{{$i$}};
+    \draw (-.2,8) node[left]{{$j$}};
+    \draw (3, -.2) node[above]{$i'\vphantom{i'j'}$};
+    \draw (7, -.2) node[above]{$j'\vphantom{i'j'}$};
+}
+
+\onslide<4-5>{
+    \draw[line width=7pt, darkgreen, cap=round,opacity=0.5] (0,0) -- (0,0.5) -- (5, 5.5) -- (5,6) -- (6,7) -- (6,7.5) -- (8.5,10) -- (9.5,10) -- (10,10.5)-- (10.5,10.5) -- (12,12);
+}  
+\onslide<5>{
+    \draw[line width=5pt, darkred, cap=round,opacity=0.5] (0,0) -- (0,0.5) -- (3,3.5) -- (3,4) -- (7,8) -- (7,8.5) -- (8.5,10) -- (9.5,10) -- (10,10.5)-- (10.5,10.5) -- (12,12);
+}  
+
+\onslide<6->{
+    \draw[line width=7pt, darkgreen, cap=round,opacity=0.5] (0,0) -- (3.5,3.5) -- (4,3.5) -- (5,4.5) -- (5.5,4.5) -- (6,5) -- (6,5.5) -- (6.5,6) -- (7,6) -- (9,8) -- (9,8.5) -- (10,9.5) -- (10.5,10)-- (10.5,10.5) -- (12,12);
+}   
+\onslide<7->{
+    \draw[line width=5pt, darkred, cap=round,opacity=0.5] (3,4) -- (4.5,4) -- (5,4.5) -- (5.5,4.5) -- (6,5) -- (6,5.5) -- (6.5,6) -- (7,6) -- (7,8);
+}   
+
+%\node<4->[darkred] at (\myi * \gp + \gp / 2, \myi * \gp + \gp / 2) {\Large $D_{\myi, {\the\numexpr \myi + 1}}$};
+
+
+%\draw<6->[fill=orange, thick,opacity=0.4] (4.2 * \gp - 1.0 * \gp * \charwidth, 0) rectangle (4.2 * \gp + 1.0 * \gp * \charwidth, \H);
+%\draw<7->[fill=orange, thick,opacity=0.4] (0, 2.5 * \gp - 1.0 * \gp * \charwidth) rectangle (\W, 2.5 * \gp + 1.0 * \gp * \charwidth);

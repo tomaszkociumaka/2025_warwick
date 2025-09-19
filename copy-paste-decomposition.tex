@@ -1,0 +1,84 @@
+
+\def\shft{0}
+\def\W{12}
+\def\H{12}
+\def\myi{2}
+\def\cnt{6}
+\def\sizeofdot{2pt}
+%\draw[black,thin] (-1,-1) grid (\H + 1,\W + 1);
+
+\draw[line width=3pt, white,line cap=round] (0, 0) -- (2, 0) -- (3, 1) -- (3, 2) -- (9, 8) -- (10, 8) -- (12, 10) -- (12, 12);
+\draw[line width=3pt, darkgreen!30,line cap=round] (0, 0) -- (2, 0) -- (3, 1) -- (3, 2) -- (9, 8) -- (10, 8) -- (12, 10) -- (12, 12);
+
+\onslide<-14>{
+
+\def\gp{0.12}
+
+\draw[dashed, lightgray] (\gp, \gp) -- (\H - \gp, \W - \gp);
+
+\draw<1>[fill] (0,0) circle  [radius=\sizeofdot];
+
+\draw<2->[blue!50] (0,-\gp) to [out=60,in=120] node[above,midway] {$\mathtt{a}$} (1,-\gp);
+\draw<4->[white] (-\gp, 0) to [out=210,in=150] node[left,midway] {\textcolor{blue!50}{$\mathtt{a}$}} (-\gp, 1);
+\draw<2>[fill] (1,0) circle  [radius=\sizeofdot];
+
+\draw<3->[red!50] (1,-\gp) to [out=60,in=120] node[above,midway] {$\mathtt{b}$} (2,-\gp);
+\draw<5->[white] (-\gp, 1) to [out=210,in=150] node[left,midway] {\textcolor{red!50}{$\mathtt{b}$}} (-\gp, 2);
+\draw<3>[fill] (2,0) circle  [radius=\sizeofdot];
+
+\draw<4->[blue!50] (2,-\gp) to [out=60,in=120] node[above,midway] {$\mathtt{a}$} (3,-\gp);
+\draw<8->[white] (-\gp, 2) to [out=210,in=150] node[left,midway] {\textcolor{blue!50}{$\mathtt{a}$}} (-\gp, 3);
+\draw<4>[fill] (3,1) circle  [radius=\sizeofdot];
+
+\draw<5>[fill] (3,2) circle  [radius=\sizeofdot];
+
+\foreach \x in {4,5,...,9}{
+    \draw<8->[white] (\x - 1,-\gp) to [out=60,in=120] node[above,midway] {\textcolor{blue!50}{$\mathtt{a}$}} (\x,-\gp);
+    \ifthenelse{\x = 9}{
+        \draw<11->[white] (-\gp, \x - 1) to [out=210,in=150] node[left,midway] {\textcolor{blue!50}{$\mathtt{a}$}} (-\gp,\x);
+    }{
+        \draw<8->[white] (-\gp, \x - 1) to [out=210,in=150] node[left,midway] {\textcolor{blue!50}{$\mathtt{a}$}} (-\gp,\x);
+    }
+}
+\draw<6-8>[dashed, lightgray] (3, \gp) -- (3, 2 - \gp);
+\draw<7-8>[dashed, lightgray] (2, \gp) -- (2, 2 - \gp);
+\draw<6-8>[dashed, lightgray] (\gp, 2) -- (3 - \gp, 2);
+\draw<6-8>[dashed, lightgray] (9, \gp) -- (9, 8 - \gp);
+\draw<7-8>[dashed, lightgray] (8, \gp) -- (8, 8 - \gp);
+\draw<6-8>[dashed, lightgray] (\gp, 8) -- (9 - \gp, 8);
+\draw[white] (3,-\gp) to [out=90,in=90] (9, -\gp);
+\draw<6->[violet!50] (3,-\gp) to [out=90,in=90] (9, -\gp);
+\draw[white] (-\gp, 2) to [out=180,in=180] (-\gp, 8);
+\draw<6-8>[violet!50] (-\gp, 2) to [out=180,in=180] (-\gp, 8);
+\draw<7->[violet!50] (2,-\gp) to [out=90,in=90] (8, -\gp);
+\draw<6-8>[fill] (9,8) circle  [radius=\sizeofdot];
+
+\draw<9->[cyan!50] (9,-\gp) to [out=60,in=120] node[above,midway] {$\mathtt{c}$} (10,-\gp);
+\draw<11->[white] (-\gp, 9) to [out=210,in=150] node[left,midway] {\textcolor{cyan!50}{$\mathtt{c}$}} (-\gp, 10);
+\draw<9>[fill] (10,8) circle  [radius=\sizeofdot];
+
+\draw<11->[white] (10,-\gp) to [out=60,in=120] node[above,midway] {\textcolor{blue!50}{$\mathtt{a}$}} (11,-\gp);
+\draw<12->[white] (-\gp, 10) to [out=210,in=150] node[left,midway] {\textcolor{blue!50}{$\mathtt{a}$}} (-\gp,11);
+\draw<11->[white] (11,-\gp) to [out=60,in=120] node[above,midway] {\textcolor{cyan!50}{$\mathtt{c}$}} (12,-\gp);
+\draw<13->[white] (-\gp,11) to [out=210,in=150] node[left,midway] {\textcolor{cyan!50}{$\mathtt{c}$}} (-\gp,12);
+\draw<10->[brown!50] (8,-\gp) to [out=60,in=120] (10, -\gp);
+\draw<10->[brown!50] (10,-\gp) to [out=60,in=120] (12, -\gp);
+\draw<10-11>[fill] (12,10) circle  [radius=\sizeofdot];
+
+\draw<12>[fill] (12,11) circle  [radius=\sizeofdot];
+\draw<13>[fill] (12,12) circle  [radius=\sizeofdot];
+}
+
+\draw[thick] (0, 0) rectangle (\H, \W);
+
+
+%\draw[white] (3,-\gp) to [out=60,in=120] (9, -\gp);
+%\draw<5> (2,-\gp) to [out=60,in=120] (8, -\gp);
+
+%\foreach \x in {2,3,...,8}
+%    \draw<6-> (\x,-\gp) to [out=60,in=120] (\x + 1,-\gp);
+
+%\draw<7->[cyan] (2,-\gp) to [out=90,in=90] (4,-\gp);
+%\draw<7->[cyan] (4,-\gp) to [out=90,in=90] (6,-\gp);
+%\draw<7>[cyan] (6,-\gp) to [out=90,in=90] (8,-\gp);
+%\draw<8>[olive] (6,-\gp) to [out=90,in=90] (9,-\gp);

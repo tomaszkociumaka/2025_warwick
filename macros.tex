@@ -1,0 +1,100 @@
+
+\newcommand{\BWT}{\mathsf{BWT}}
+\newcommand{\SA}{\mathsf{SA}}
+\newcommand{\ISA}{\mathsf{ISA}}
+\newcommand{\LCE}{\mathsf{LCE}}
+\newcommand{\LCP}{\mathsf{LCP}}
+\newcommand{\RMQ}{\mathsf{RMQ}}
+\newcommand{\per}{\mathsf{period}}
+\renewcommand{\S}{\mathsf{S}}
+\newcommand{\C}{\mathsf{C}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\RR}{\mathbb{R}}
+
+\newcommand{\ceil}[1]{\lceil #1 \rceil}
+
+\newcommand{\rank}[3]{\mathsf{rank}_{#1,#2}(#3)}
+\newcommand{\select}[3]{\mathsf{select}_{#1,#2}(#3)}
+\newcommand{\dd}{\mathinner{.\,.}}
+\newcommand{\Oh}{\mathcal{O}}
+\newcommand{\bigO}{\Oh}
+\newcommand{\Ohtilde}{\widetilde{\Oh}}
+\newcommand{\where}[1]{{\textcolor{MPIgreen}{[{\footnotesize #1}]}}}
+\DeclareMathOperator{\polylog}{polylog}
+
+\makeatletter
+\newcommand{\Scale}[2][1]{\scalebox{#1}{$\m@th#2$}}
+\makeatother
+\newcommand{\sblacktriangleright}{%
+  \vcenter{\hbox{\Scale[0.75]{\blacktriangleright}}}%
+}
+\newcommand{\mycirc}{%
+  \textcolor{blue}{%
+    \small\raise1.5pt\hbox{\donotcoloroutermaths$\sblacktriangleright$}%
+  }%
+}
+\newcommand{\cmark}{\text{\ding{51}}}
+
+\definecolor{darkgreen}{RGB}{0,180,0}
+
+\newcommand{\hd}{\mathsf{hd}}
+\newcommand{\ed}{\mathsf{ed}}
+\newcommand{\ded}{\mathsf{dd}}
+\newcommand{\td}{\mathsf{td}}
+\newcommand{\selfed}{\mathsf{self\text{-}ed}}
+\newcommand{\wed}{\ed^w}
+
+\newcommand{\lt}{\mathsf{in}}
+\newcommand{\br}{\mathsf{out}}
+\newcommand{\dist}{\mathsf{dist}}
+\newcommand{\myhfill}{\hskip0pt plus 1filll}
+
+\newcommand{\Exp}{\mathbb{E}}
+\newcommand{\tOh}{\Ohtilde}
+\newcommand\sed{\mathsf{self}\text{-}\ed}
+\newcommand{\len}{\mathsf{len}}
+\newcommand{\AG}{\mathsf{AG}}
+\newcommand{\BM}{\mathsf{BM}}
+
+\def\twoheadleadsto{\tikz[baseline=(a.base)]{\draw[%
+    decorate,decoration={zigzag,segment length=4, amplitude=.9},%
+    ] (0,0) -- (.25, 0);%
+    \draw[%
+    -{Classical TikZ Rightarrow}.{Classical TikZ Rightarrow},%
+    ] (.25, 0) -- (.4, 0);%
+    \node (a) at (.4/2,-.03) {\phantom{\(\leadsto\)}};%
+}}
+
+\newcommand{\onto}{\twoheadleadsto}
+
+\newcommand{\tikzmark}[1]{\tikz[overlay,remember picture] \node (#1) {};}
+
+\makeatletter
+\NewDocumentCommand{\DrawBox}{s O{}}{%
+    \tikz[overlay,remember picture]{
+    \IfBooleanTF{#1}{%
+        \coordinate (RightPoint) at ($(left |- right)+(\linewidth-\labelsep-\labelwidth,0.0)$);
+    }{%
+        \coordinate (RightPoint) at (right.east);
+    }%
+    \draw[red,#2]
+      ($(left)+(-0.2em,0.9em)$) rectangle
+      ($(RightPoint)+(0.2em,-0.3em)$);}
+}
+
+\NewDocumentCommand{\DrawBoxWide}{s O{}}{%
+    \tikz[overlay,remember picture]{
+    \IfBooleanTF{#1}{%
+        \coordinate (RightPoint) at ($(left |- right)+(\linewidth-\labelsep-\labelwidth,0.0)$);
+    }{%
+        \coordinate (RightPoint) at (right.east);
+    }%
+    \draw[red,#2]
+      ($(left)+(-\labelwidth,0.9em)$) rectangle
+      ($(RightPoint)+(0.2em,-0.3em)$);}
+}
+\makeatother
+
+\newcommand{\bigpicture}[1]{#1}
+%\newcommand{\bigpicture}[1]{}
+\newcommand{\thiswork}{\textcolor{darkblue}{[this work]}}
