@@ -262,7 +262,7 @@
   
 \end{frame}
 
-\againframe<7>{ed}
+\againframe<7-8>{ed}
 
 
 \begin{frame}<1,2>[label=toc]
@@ -336,7 +336,7 @@
 
     \medskip
 
-  \textbf{Problem:} Can we compute (bounded) edit distance faster if the input strings are highly compressible using standard methods? (grammar compression, LZ77, BTW+RLE,\ldots)
+  \textbf{Problem:} Can we compute (bounded) edit distance faster if the input strings are highly compressible using standard methods? (grammar compression, LZ77, BWT+RLE,\ldots)
 
 \vfill
 
@@ -566,7 +566,7 @@
     \onslide<6->{\where{DGH\textbf{K}S23} & $\Oh(n + k^5)$ & $\mathbb{R}_{\ge 1}$ & \\[1ex]}
     \onslide<7->{\textbf<11>{\where{C\textbf{K}W23}} & $\tOh(n + \sqrt{nk^3})$ & $\mathbb{R}_{\ge 1}$ & tight for $\sqrt{n} \le k \le n$ under APSPH\\[1ex]}
     \onslide<8->{\textcolor{gray}{\textbf{Open}} & \textcolor{gray}{$\Ohtilde(n+k^{2.5})$} & \textcolor{gray}{$\mathbb{R}_{\ge 1}$} & \\[1ex]}
-    \onslide<9->{\textbf<11>{\where{G\textbf{K}24}} & $\tOh(n + Wk^2)$ & $\{1, 2, \ldots, W\}$ & tight for  $1 \le k \le n$ and $W = n^{o(1)}$ under OVH\\[1ex]}
+    \onslide<9->{\textbf<11>{\where{G\textbf{K}24}} & $\tOh(n + k^2W)$ & $\{1, 2, \ldots, W\}$ & tight for  $1 \le k \le n$ and $W = n^{o(1)}$ under OVH\\[1ex]}
     \onslide<10->{\textcolor{gray}{\textbf{Open}} & \textcolor{gray}{$\Ohtilde(n+k^2 W^{o(1)})$} &\textcolor{gray}{$\{1, 2, \ldots, W\}$}}
 \end{tabular}
 \end{frame}
@@ -584,7 +584,7 @@
         \medskip
 
         \onslide<3->{
-            Say $X[i\dd j)=P=Y[i'\dd j')$ for $|i-i'|\le 2k$.
+            Say $X[i\dd j)=P=Y[i'\dd j')$ for $|i-i'|\le k$.
             Can we greedily align these fragments?
             \begin{itemize}
                 \item<4-> If $\mathcal{A}$ intersects $(i,j)\leadsto (i',j')$\onslide<5->{, yes!}
@@ -612,7 +612,7 @@
     \end{columns}
 \end{frame}
 
- \begin{frame}{Self-Edit Distance}
+ \begin{frame}<4->{Self-Edit Distance}
     \begin{columns}
         \begin{column}{0.5\textwidth}
             \begin{block}{Self-Edit Distance\hfill [C\textbf{K}W23]}
@@ -621,7 +621,7 @@
             \onslide<6->{
             \textbf{Intuition:}\hfill (for unweighted edit distance)
             \begin{itemize}
-                \item  If $X[i\dd j)=P=Y[i'\dd j')$ with $|i-i'|\le 2k$ and $\sed(P)> 3k$,
+                \item  If $X[i\dd j)=P=Y[i'\dd j')$ with $|i-i'|\le k$ and $\sed(P)> 3k$,
             then the two fragments can be aligned greedily.
             \end{itemize}
            
@@ -749,13 +749,10 @@
   \end{frame}
 
 
-  \begin{frame}{Divide-and-Conquer Scheme: Consequences}
+  \begin{frame}<1,3-4,6->{Divide-and-Conquer Scheme: Consequences}
     \textbf{Main Takeaway}
    \begin{enumerate}
     \item Computing $\ed_{\le k}(X,Y)$ reduces to the case of $\sed(X), \sed(Y)=\Oh(k)$.
-    \begin{itemize}
-        \item<2-> In the weighted and dynamic setting, one even can avoid extra logarithmic factors.
-    \end{itemize}
     \item<3-> Due to $\mathsf{LZ77}(S)=\Oh(\sed(S))$, we can use tools from the fully compressed setting.
 \end{enumerate}
 \pause\pause\pause\bigskip
@@ -890,7 +887,7 @@
                 \item<7-> Compute distance matrices for all $\Oh(k)$ distinct boxes:
                 \begin{itemize}
                     \item<8-> Use weighted grammars to guide a hierarchical box decomposition.
-                    \item<9-> One can achieve $\Oh(k^2/\ell)$ distinct boxes of size $\Theta(\ell)\times \Theta(\ell)$.
+                    \item<9-> One can achieve $\Oh(k^2/\ell)$ distinct boxes of size $\Theta(\ell)\times \Theta(\ell)$ for any $\ell$.
                     \item<10-> Stitch distance matrices bottom up.
                 \end{itemize}
                 \item<11-> Finally, compute $\Oh(k\log n)$ products.
@@ -916,7 +913,7 @@
     \textbf{Contribution:}
     \begin{itemize}
         \item A new scheme for bounded edit distance computation.
-        \item Useful in many settings (quantum, dynamic, weighed).
+        \item Useful in many settings (quantum, dynamic, weighted).
         \item Yields near-optimal algorithms in many parameter regimes.
     \end{itemize}
 
@@ -924,7 +921,7 @@
     \pause
     \textbf{High-level scheme:}
     \begin{enumerate}
-        \item Computing bounded edit distance reduces to instances with self-edit distance $\Oh(k)$.
+        \item Divide-and-conquer reduces the problem to instances with small self-edit distance.
         \item Instances with small self-edit distance are repetitive.
         \item Stitching distance matrices via min-plus multiplication of structured Monge matrices.
     \end{enumerate}
@@ -935,8 +932,9 @@
 \begin{frame}{Open Problems}
     \textbf{Bridge the remaining gaps:}
     \begin{enumerate}
-        \item $n^2$ vs $n^{1.5}$ for quantum edit distance.
-        \item $n+k^{2.5}$ vs $n+\sqrt{nk^3}$ for weighted edit distance with $\sqrt[3]{n} \le k \le \sqrt{n}$.
+        \item $g+k^2$ and $g\sqrt{kn}$ vs $gk$ for compressed edit distance;
+        \item $n^2$ vs $n^{1.5}$ for quantum edit distance;
+        \item $n+k^{2.5}$ vs $n+\sqrt{nk^3}$ for weighted edit distance with $\sqrt[3]{n} \le k \le \sqrt{n}$;
         \item $n+k^2$ vs $n+k^2W$ for weighted edit distance with integer weights.
     \end{enumerate}
 
@@ -947,17 +945,17 @@
     \textbf{Boundary-to-boundary distance queries in directed grids:}\\
     {\footnotesize \hfill No diagonal edges, arbitrary positive weights on horizontal and vertical edges.}
     \begin{enumerate}
-        \item Static algorithm for repetitive grids: is $n^2$ needed for preprocessing plus $n$ queries?
-        \item Dynamic algorithm for integer weights $\{1,\ldots,W\}$? 
+        \item<2-> Static algorithm for repetitive grids: is $n^2$ needed for preprocessing plus $n$ queries?
+        \item<3-> Dynamic algorithm for integer weights $\{1,\ldots,W\}$? 
         \begin{itemize}
             \item Edge cost updates?
             \item Row/column updates?
         \end{itemize}
-        \item Dynamic reachability queries ($\{1,\infty\}$ weights)?
+        \item<4-> Dynamic reachability queries ($\{1,\infty\}$ weights)?
     \end{enumerate}
 
         \begin{tikzpicture}[overlay,remember picture]
-      \node<3->[text=MPIgreen] at ([xshift=2.7cm,yshift=.5cm]current page.center){\Huge Thank you!};
+      \node<5->[text=MPIgreen] at ([xshift=2.7cm,yshift=.3cm]current page.center){\Huge Thank you!};
       \end{tikzpicture}%
 
 \end{frame}
